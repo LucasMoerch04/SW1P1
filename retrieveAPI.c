@@ -10,20 +10,12 @@ struct MemoryStruct {
     size_t size;
 };
 
-// Callback function for handling the response data
-static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
-    size_t totalSize = size * nmemb;
-    struct MemoryStruct *mem = (struct MemoryStruct *)userp;
+double lat = 0.0;
+double lon = 0.0;
 
-    mem->memory = realloc(mem->memory, mem->size + totalSize + 1);
-    memcpy(&(mem->memory[mem->size]), contents, totalSize);
-    mem->size += totalSize;
-    mem->memory[mem->size] = 0;
+static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
-    return totalSize;
-}
-
-int main(void) {
+void get_coordinates(void) {
     CURL *handle;
     struct MemoryStruct chunk;
 
@@ -51,11 +43,11 @@ int main(void) {
         cJSON *latitude = cJSON_GetObjectItemCaseSensitive(first_result, "latitude");
         cJSON *longitude = cJSON_GetObjectItemCaseSensitive(first_result, "longitude");
 
-        double lat = latitude->valuedouble;
-        double lon = longitude->valuedouble;
 
-        printf("Latitude: %f\n", lat);
-        printf("Longitude: %f\n", lon);
+    
+        lat = latitude->valuedouble;
+        lon = longitude->valuedouble;
+
 
         // Cleanup
         cJSON_Delete(json);
@@ -63,5 +55,19 @@ int main(void) {
         free(chunk.memory);  // Free the memory allocated for the response
     }
 
-    return 0;
 }
+
+
+// Callback function for handling the response data
+static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
+    size_t totalSize = size * nmemb;
+    struct MemoryStruct *mem = (struct MemoryStruct *)userp;
+
+    mem->memory = realloc(mem->memory, mem->size + totalSize + 1);
+    memcpy(&(mem->memory[mem->size]), contents, totalSize);
+    mem->size += totalSize;
+    mem->memory[mem->size] = 0;
+
+    return totalSize;
+}
+

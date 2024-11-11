@@ -61,7 +61,6 @@ Step 3 Run the project and smile:
 
 ```
 ./MyProject
-
 ```
 
 

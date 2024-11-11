@@ -47,7 +47,8 @@ brew install json-c´´´
 
 
 Step 2: Create a Build Directory and Generate Build Files with CMake + make the project:
+
 ```mkdir build
 cd build
 cmake ..
-make´´´
+make```

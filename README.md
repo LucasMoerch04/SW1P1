@@ -44,7 +44,7 @@ Step 2: Create a Build Directory and Generate Build Files with CMake + make the 
 
 ```brew install curl
 brew install cmake
-brew install json-c´´´
+brew install cjson´´´
 
 ```mkdir build
 cd build

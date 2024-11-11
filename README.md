@@ -6,7 +6,7 @@ Step.1:
 
 brew install curl
 brew install cmake
-brew install json-c
+brew install cjson
 
 Step.2:
 

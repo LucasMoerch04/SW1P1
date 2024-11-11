@@ -1,0 +1,3 @@
+/mnt/c/Users/lucas/OneDrive/P1/build/CMakeFiles/MyProject.dir
+/mnt/c/Users/lucas/OneDrive/P1/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/lucas/OneDrive/P1/build/CMakeFiles/rebuild_cache.dir

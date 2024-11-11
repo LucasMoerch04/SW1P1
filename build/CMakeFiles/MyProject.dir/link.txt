@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/MyProject.dir/main.c.o CMakeFiles/MyProject.dir/retrieveAPI.c.o -o MyProject  -Wl,-rpath,/home/linuxbrew/.linuxbrew/Cellar/cjson/1.7.18/lib /home/linuxbrew/.linuxbrew/Cellar/cjson/1.7.18/lib/libcjson.so.1.7.18 /usr/lib/x86_64-linux-gnu/libcurl.so -lm

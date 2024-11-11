@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.10)
+project(MyProject VERSION 1.0 LANGUAGES C)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED True)
+
+find_package(CURL REQUIRED)
+find_package(cJSON REQUIRED)
+
+add_executable(MyProject main.c retrieveAPI.c retrieveAPI.h)
+
+target_link_libraries(MyProject cjson CURL::libcurl)
+

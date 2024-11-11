@@ -6,7 +6,7 @@ int main(void){
 
     printf("hello, world\n");
 
-    printf("%lf", lat);
-    printf("%lf", lon);
+    printf("%lf\n", lat);
+    printf("%lf\n", lon);
     return 0;
 }

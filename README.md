@@ -43,11 +43,11 @@ Step 1: Install cURL, CMake, and JSON-C
 
 ```brew install curl
 brew install cmake
-brew install json-c```
+brew install json-c´´´
 
 
 Step 2: Create a Build Directory and Generate Build Files with CMake + make the project:
 ```mkdir build
 cd build
 cmake ..
-make```
+make´´´

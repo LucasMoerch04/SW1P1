@@ -15,6 +15,7 @@ double lon = 0.0;
 
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
+
 void get_coordinates(void) {
     CURL *handle;
     struct MemoryStruct chunk;
@@ -25,7 +26,7 @@ void get_coordinates(void) {
     handle = curl_easy_init();
     if (handle) {
         // Set the URL for the API request
-        curl_easy_setopt(handle, CURLOPT_URL, "https://api.dataforsyningen.dk/adresser?postnr=8830&vejnavn=Bakkevej&format=geojson");
+        curl_easy_setopt(handle, CURLOPT_URL, "https://api.dataforsyningen.dk/adresser?postnr=2630&vejnavn=Gartnerparken&format=geojson");
 
         // Set up the callback function to handle data
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);

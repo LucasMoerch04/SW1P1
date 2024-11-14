@@ -25,37 +25,38 @@ void get_coordinates(void) {
     handle = curl_easy_init();
     if (handle) {
         // Set the URL for the API request
-        curl_easy_setopt(handle, CURLOPT_URL, "https://geocoding-api.open-meteo.com/v1/search?name=2650&count=1&language=en&format=json");
+        curl_easy_setopt(handle, CURLOPT_URL, "https://api.dataforsyningen.dk/adresser?postnr=8830&vejnavn=Bakkevej&format=geojson");
 
         // Set up the callback function to handle data
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, (void *)&chunk);
 
         // Perform the request
-        curl_easy_perform(handle);
+        if (curl_easy_perform(handle) == CURLE_OK) {
+            // Parse the JSON response
+            cJSON *json = cJSON_Parse(chunk.memory);
+            cJSON *features = cJSON_GetObjectItemCaseSensitive(json, "features");
+            cJSON *first_feature = cJSON_GetArrayItem(features, 0);
+            cJSON *geometry = cJSON_GetObjectItemCaseSensitive(first_feature, "geometry");
+            cJSON *coordinates = cJSON_GetObjectItemCaseSensitive(geometry, "coordinates");
 
-        // Parse the JSON response
-        cJSON *json = cJSON_Parse(chunk.memory);
+            // Retrieve longitude and latitude
+            cJSON *longitude = cJSON_GetArrayItem(coordinates, 0);
+            cJSON *latitude = cJSON_GetArrayItem(coordinates, 1);
 
-        // Extract latitude and longitude from the JSON
-        cJSON *results = cJSON_GetObjectItemCaseSensitive(json, "results");
-        cJSON *first_result = cJSON_GetArrayItem(results, 0);
-        cJSON *latitude = cJSON_GetObjectItemCaseSensitive(first_result, "latitude");
-        cJSON *longitude = cJSON_GetObjectItemCaseSensitive(first_result, "longitude");
+            // Set global lat and lon
+            lat = latitude->valuedouble;
+            lon = longitude->valuedouble;
 
+            // Cleanup
+            cJSON_Delete(json);
+        }
 
-    
-        lat = latitude->valuedouble;
-        lon = longitude->valuedouble;
-
-
-        // Cleanup
-        cJSON_Delete(json);
         curl_easy_cleanup(handle);
         free(chunk.memory);  // Free the memory allocated for the response
     }
-
 }
+
 
 
 // Callback function for handling the response data

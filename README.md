@@ -37,6 +37,8 @@ If you're using **Windows**, you will need **WSL (Windows Subsystem for Linux)**
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
+   "do the lines with path!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+
 
 🛠️ Installing Dependencies
 Step 1: Install cURL, CMake, and JSON-C

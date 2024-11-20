@@ -6,7 +6,6 @@
 #define _GNU_SOURCE
 
 
-
 // Structure to hold the response data
 struct MemoryStruct {
     char *memory;
@@ -25,31 +24,20 @@ void get_coordinates(int postal, char *street_name) {
     chunk.memory = malloc(1);  // Initial allocation
     chunk.size = 0;
 
-    printf("test7");
-    
     char *url = NULL;
 
     asprintf(&url, "https://api.dataforsyningen.dk/adresser?postnr=%d&vejnavn=%s&format=geojson", postal, street_name);
     
-    printf("%d\n", postal);
-                    printf("test5");
-
     handle = curl_easy_init();
-                printf("test4");
 
     if (handle) {
         // Set the URL for the API request
         curl_easy_setopt(handle, CURLOPT_URL, url);
-                printf("test1");
-
 
         // Set up the callback function to handle data
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-                printf("test2");
 
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, (void *)&chunk);
-                printf("test3");
-
 
         // Perform the request
         if (curl_easy_perform(handle) == CURLE_OK) {
@@ -76,7 +64,6 @@ void get_coordinates(int postal, char *street_name) {
         free(chunk.memory);  // Free the memory allocated for the response
     }
 }
-
 
 
 // Callback function for handling the response data

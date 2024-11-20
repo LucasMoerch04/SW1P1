@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cjson/cJSON.h>  // Include cJSON for JSON parsing
+#define _GNU_SOURCE
+
+
 
 // Structure to hold the response data
 struct MemoryStruct {
@@ -15,21 +18,38 @@ double lon = 0.0;
 
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
-void get_coordinates(void) {
+void get_coordinates(int postal, char *street_name) {
     CURL *handle;
     struct MemoryStruct chunk;
 
     chunk.memory = malloc(1);  // Initial allocation
     chunk.size = 0;
 
+    printf("test7");
+    
+    char *url = NULL;
+
+    asprintf(&url, "https://api.dataforsyningen.dk/adresser?postnr=%d&vejnavn=%s&format=geojson", postal, street_name);
+    
+    printf("%d\n", postal);
+                    printf("test5");
+
     handle = curl_easy_init();
+                printf("test4");
+
     if (handle) {
         // Set the URL for the API request
-        curl_easy_setopt(handle, CURLOPT_URL, "https://api.dataforsyningen.dk/adresser?postnr=8830&vejnavn=Bakkevej&format=geojson");
+        curl_easy_setopt(handle, CURLOPT_URL, url);
+                printf("test1");
+
 
         // Set up the callback function to handle data
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+                printf("test2");
+
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, (void *)&chunk);
+                printf("test3");
+
 
         // Perform the request
         if (curl_easy_perform(handle) == CURLE_OK) {

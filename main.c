@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include "retrieveAPI.h"
+#include "applicantStruct.h"
 
 int main(void){
-    get_coordinates();
+
+
+    get_coordinates(2650, "Bymuren");
+    default_list();
 
     printf("hello, world\n");
 

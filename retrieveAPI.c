@@ -17,7 +17,9 @@ double lon = 0.0;
 
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
+
 void get_coordinates(int postal, char *street_name) {
+
     CURL *handle;
     struct MemoryStruct chunk;
 
@@ -33,6 +35,7 @@ void get_coordinates(int postal, char *street_name) {
     if (handle) {
         // Set the URL for the API request
         curl_easy_setopt(handle, CURLOPT_URL, url);
+        
 
         // Set up the callback function to handle data
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);

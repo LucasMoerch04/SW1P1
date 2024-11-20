@@ -4,6 +4,9 @@
 # vs code
 .vscode/
 
+# build dir
+build
+
 # Object files
 *.o
 *.ko

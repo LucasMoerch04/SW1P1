@@ -8,5 +8,7 @@ int main(void){
 
     printf("%lf\n", lat);
     printf("%lf\n", lon);
+
+    
     return 0;
 }

@@ -59,6 +59,13 @@ cmake ..
 make
 ```
 
+*If make doesn't work, try:
+```
+sudo apt update
+sudo apt upgrade
+sudo apt install build-essential
+```
+
 Step 3 Run the project and smile:
 
 ```

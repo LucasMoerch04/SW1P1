@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "retrieveAPI.h"
 #include "applicantStruct.h"
+#include "distance.h"
 #include "co2.h"
 
 int main(void){

@@ -10,6 +10,7 @@ int main(void){
     get_coordinates(2650, "Bymuren");
     default_list();
     printf("CO2: %lf\n", CalculateEmissions(200, "Car"));
+    printf("Distance %lf\n", haversine(lat, lon, lat, lon));
 
     printf("hello, world\n");
 

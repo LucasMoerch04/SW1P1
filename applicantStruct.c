@@ -14,7 +14,7 @@ typedef struct Applicant {
     
 } Applicant;
 
-Applicant default_list(void){
+Applicant create_default_list(void){
     // Initiate applicants array
     Applicant *applicants;
     

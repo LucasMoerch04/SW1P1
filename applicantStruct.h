@@ -18,7 +18,7 @@ typedef struct Applicant {
 
 
 // Function prototypes
-Applicant default_list(void);
+Applicant create_default_list(void);
 
 
 #endif 

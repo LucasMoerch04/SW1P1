@@ -18,7 +18,7 @@ double lon = 0.0;
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
 
-void get_coordinates(int postal, char *street_name) {
+int get_coordinates(int postal, char *street_name, double *lat, double *lon) {
 
     CURL *handle;
     struct MemoryStruct chunk;
@@ -56,8 +56,8 @@ void get_coordinates(int postal, char *street_name) {
             cJSON *latitude = cJSON_GetArrayItem(coordinates, 1);
 
             // Set global lat and lon
-            lat = latitude->valuedouble;
-            lon = longitude->valuedouble;
+            *lat = latitude->valuedouble;
+            *lon = longitude->valuedouble;
 
             // Cleanup
             cJSON_Delete(json);
@@ -65,7 +65,10 @@ void get_coordinates(int postal, char *street_name) {
 
         curl_easy_cleanup(handle);
         free(chunk.memory);  // Free the memory allocated for the response
+
+        return 1;
     }
+    return 0;
 }
 
 

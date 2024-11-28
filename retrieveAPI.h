@@ -12,11 +12,9 @@ struct MemoryStruct {
     size_t size;
 };
 
-extern double lat;
-extern double lon;
 
 // Function prototypes
-void get_coordinates(int postal, char *street_name);
+int get_coordinates(int postal, char *street_name, double *lat, double *lon);
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
 #endif // GEOCODING_H

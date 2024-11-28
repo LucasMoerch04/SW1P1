@@ -2,6 +2,7 @@
 #define APPLICANTSTRUCH_H
 
 #include <stdio.h>
+#include <stdlib.h>
 
 
 // Structure to hold the response data
@@ -18,7 +19,9 @@ typedef struct Applicant {
 
 
 // Function prototypes
-Applicant create_default_list(void);
+Applicant *create_default_list(void);
+int get_list_size(Applicant *applicants);
+
 
 
 #endif 

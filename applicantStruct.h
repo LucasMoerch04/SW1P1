@@ -21,6 +21,8 @@ typedef struct Applicant {
 // Function prototypes
 Applicant *create_default_list(void);
 int get_list_size(Applicant *applicants);
+void addApplicants(Applicant *applicantArray, int *numApplicants, const char *filePath, 
+                  int postal, double distance, int daysOnList, double newCO2, double preCO2);
 
 
 

@@ -12,30 +12,24 @@ typedef struct Applicant{
     double preCO2;
 } Applicant;
 
-void addApplicants(Applicant *applicants, int *numApplicants);
+void readApplicantsList(Applicant *applicants, int *numApplicants);
+void newApplicant(int numApplicants, int postal, double distance, int daysOnList, double newCO2, double preCO2);
 
- 
-Applicant *createDefaultList(void){
+
+Applicant *makeApplicantsArray(int *numApplicants){
     Applicant *applicants = malloc(MAX_APPLICANTS * sizeof(Applicant));
     if (applicants == NULL){
         printf("Memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
 
-    int numApplicants = 0;
-
-    addApplicants(applicants, &numApplicants);
-
-    for (int i = 0; i < numApplicants; i++){
-        printf("ID: %d, Postal: %d, Distance: %.2f, Days: %d, New CO2: %.2f, Pre CO2: %.2f\n",
-               applicants[i].id, applicants[i].postal, applicants[i].distance,
-               applicants[i].daysOnList, applicants[i].newCO2, applicants[i].preCO2);
-    }
+    
+    readApplicantsList(applicants, numApplicants);
 
     return applicants;
 }
 
-void addApplicants(Applicant *applicants, int *numApplicants){
+void readApplicantsList(Applicant *applicants, int *numApplicants){
     int largestId = 0;
 
     // Open txt file
@@ -67,3 +61,13 @@ void addApplicants(Applicant *applicants, int *numApplicants){
     }
 }
 
+void newApplicant(int numApplicants, int postal, double distance, int daysOnList, double newCO2, double preCO2){
+    FILE *file = fopen("applicants.txt", "a");
+    int id = numApplicants + 1;
+
+    if (file){
+        fprintf(file, "\n%d %d %lf %d %lf %lf", id, postal, distance, daysOnList, newCO2, preCO2);
+        printf("applicatn added\n");
+    }
+    fclose(file);
+}

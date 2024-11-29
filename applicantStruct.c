@@ -11,29 +11,30 @@ typedef struct Applicant {
     double newCO2;
     double preCO2;
 } Applicant;
-
-int get_list_size(int numApplicants) {
-    return numApplicants;
-}
+ 
 
 void addApplicants(Applicant *applicants, int *numApplicants) {
     int largestId = 0;
-    const char *filePath = "applicants.txt";
 
+    // Open txt file
+    const char *filePath = "applicants.txt";
     FILE *file = fopen(filePath, "r");
 
     if (file) {
+        // Initialize temp values
         int id, postalTemp, daysOnListTemp;
         double distanceTemp, newCO2Temp, preCO2Temp;
 
         while (fscanf(file, "%d %d %lf %d %lf %lf", &id, &postalTemp, &distanceTemp, 
                       &daysOnListTemp, &newCO2Temp, &preCO2Temp) == 6) {
+            // Look for biggest id number
             if (id > largestId) {
                 largestId = id;
             }
-
+            // add applicant to array
             applicants[*numApplicants] = (Applicant){id, postalTemp, distanceTemp, 
                                                      daysOnListTemp, newCO2Temp, preCO2Temp};
+            // 
             (*numApplicants)++;
             if (*numApplicants >= MAX_APPLICANTS) {
                 printf("Maximum number of applicants reached!\n");
@@ -62,9 +63,6 @@ Applicant *create_default_list(void) {
                applicants[i].id, applicants[i].postal, applicants[i].distance,
                applicants[i].daysOnList, applicants[i].newCO2, applicants[i].preCO2);
     }
-
-    int nr_of_applicants = get_list_size(numApplicants);
-    printf("\nAmount: %d\n", nr_of_applicants);
-
+    
     return applicants;
 }

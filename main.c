@@ -45,7 +45,7 @@ int main(void){
 
     qsort(applicant_list, 10, sizeof(Applicant), compare);
 
-    for (int i = 0; i < 3; i++){
+    for (int i = 0; i < 10; i++){
 
         printf("ID: %d Postal: %d Distance: %lf Days on list: %d New CO2: %lf Pre CO2: %lf\n", applicant_list[i].id, applicant_list[i].postal, 
                                     applicant_list[i].distance, applicant_list[i].days_on_list, 

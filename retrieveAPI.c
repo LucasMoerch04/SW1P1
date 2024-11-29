@@ -18,7 +18,7 @@ double lon = 0.0;
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
 
-int get_coordinates(int postal, char *streetName, double *lat, double *lon){
+int getCoordinates(int postal, char *streetName, double *lat, double *lon){
 
     CURL *handle;
     struct MemoryStruct chunk;

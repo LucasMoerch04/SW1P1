@@ -12,40 +12,9 @@ typedef struct Applicant{
     double preCO2;
 } Applicant;
 
-int getListSize(int numApplicants){
-    return numApplicants;
-}
+void addApplicants(Applicant *applicants, int *numApplicants);
 
-void addApplicants(Applicant *applicants, int *numApplicants){
-    int largestId = 0;
-    const char *filePath = "applicants.txt";
-
-    FILE *file = fopen(filePath, "r");
-
-    if (file){
-        int id, postalTemp, daysOnListTemp;
-        double distanceTemp, newCO2Temp, preCO2Temp;
-
-        while (fscanf(file, "%d %d %lf %d %lf %lf", &id, &postalTemp, &distanceTemp, 
-                      &daysOnListTemp, &newCO2Temp, &preCO2Temp) == 6){
-            if (id > largestId){
-                largestId = id;
-            }
-
-            applicants[*numApplicants] = (Applicant){id, postalTemp, distanceTemp, 
-                                                     daysOnListTemp, newCO2Temp, preCO2Temp};
-            (*numApplicants)++;
-            if (*numApplicants >= MAX_APPLICANTS){
-                printf("Maximum number of applicants reached!\n");
-                break;
-            }
-        }
-        fclose(file);
-    } else{
-        printf("File not found. Starting IDs from 1.\n");
-    }
-}
-
+ 
 Applicant *createDefaultList(void){
     Applicant *applicants = malloc(MAX_APPLICANTS * sizeof(Applicant));
     if (applicants == NULL){
@@ -63,8 +32,38 @@ Applicant *createDefaultList(void){
                applicants[i].daysOnList, applicants[i].newCO2, applicants[i].preCO2);
     }
 
-    int nrOfApplicants = get_list_size(numApplicants);
-    printf("\nAmount: %d\n", nrOfApplicants);
-
     return applicants;
 }
+
+void addApplicants(Applicant *applicants, int *numApplicants){
+    int largestId = 0;
+
+    // Open txt file
+    const char *filePath = "applicants.txt";
+    FILE *file = fopen(filePath, "r");
+
+    if (file){
+        int id, postalTemp, daysOnListTemp;
+        double distanceTemp, newCO2Temp, preCO2Temp;
+
+        while (fscanf(file, "%d %d %lf %d %lf %lf", &id, &postalTemp, &distanceTemp, 
+                      &daysOnListTemp, &newCO2Temp, &preCO2Temp) == 6){
+            if (id > largestId){
+                largestId = id;
+            }
+            // add applicant to array
+            applicants[*numApplicants] = (Applicant){id, postalTemp, distanceTemp, 
+                                                     daysOnListTemp, newCO2Temp, preCO2Temp};
+            // 
+            (*numApplicants)++;
+            if (*numApplicants >= MAX_APPLICANTS){
+                printf("Maximum number of applicants reached!\n");
+                break;
+            }
+        }
+        fclose(file);
+    } else{
+        printf("File not found. Starting IDs from 1.\n");
+    }
+}
+

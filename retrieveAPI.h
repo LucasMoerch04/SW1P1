@@ -7,7 +7,7 @@
 #include <cjson/cJSON.h>
 
 // Structure to hold the response data
-struct MemoryStruct {
+struct MemoryStruct{
     char *memory;
     size_t size;
 };

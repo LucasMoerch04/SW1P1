@@ -6,21 +6,21 @@
 
 
 // Structure to hold the response data
-typedef struct Applicant {
+typedef struct Applicant{
     int id;
     int postal;
     double distance;
-    int days_on_list;
-    double new_CO2;
-    double pre_CO2;
+    int daysOnList;
+    double newCO2;
+    double preCO2;
     
 } Applicant;
 
 
 
 // Function prototypes
-Applicant *create_default_list(void);
-int get_list_size(Applicant *applicants);
+Applicant *createDefaultList(void);
+int getListSize(Applicant *applicants);
 void addApplicants(Applicant *applicantArray, int *numApplicants, const char *filePath, 
                   int postal, double distance, int daysOnList, double newCO2, double preCO2);
 

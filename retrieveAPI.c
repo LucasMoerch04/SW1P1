@@ -7,7 +7,7 @@
 
 
 // Structure to hold the response data
-struct MemoryStruct {
+struct MemoryStruct{
     char *memory;
     size_t size;
 };
@@ -18,7 +18,7 @@ double lon = 0.0;
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
 
-int get_coordinates(int postal, char *street_name, double *lat, double *lon) {
+int get_coordinates(int postal, char *streetName, double *lat, double *lon){
 
     CURL *handle;
     struct MemoryStruct chunk;
@@ -28,11 +28,11 @@ int get_coordinates(int postal, char *street_name, double *lat, double *lon) {
 
     char *url = NULL;
 
-    asprintf(&url, "https://api.dataforsyningen.dk/adresser?postnr=%d&vejnavn=%s&format=geojson", postal, street_name);
+    asprintf(&url, "https://api.dataforsyningen.dk/adresser?postnr=%d&vejnavn=%s&format=geojson", postal, streetName);
     
     handle = curl_easy_init();
 
-    if (handle) {
+    if (handle){
         // Set the URL for the API request
         curl_easy_setopt(handle, CURLOPT_URL, url);
         
@@ -47,8 +47,8 @@ int get_coordinates(int postal, char *street_name, double *lat, double *lon) {
             // Parse the JSON response
             cJSON *json = cJSON_Parse(chunk.memory);
             cJSON *features = cJSON_GetObjectItemCaseSensitive(json, "features");
-            cJSON *first_feature = cJSON_GetArrayItem(features, 0);
-            cJSON *geometry = cJSON_GetObjectItemCaseSensitive(first_feature, "geometry");
+            cJSON *firstFeature = cJSON_GetArrayItem(features, 0);
+            cJSON *geometry = cJSON_GetObjectItemCaseSensitive(firstFeature, "geometry");
             cJSON *coordinates = cJSON_GetObjectItemCaseSensitive(geometry, "coordinates");
 
             // Retrieve longitude and latitude

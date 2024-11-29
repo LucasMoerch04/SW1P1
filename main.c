@@ -5,58 +5,58 @@
 #include "distance.h"
 #include "co2.h"
 
-void get_coords(int postal, char *street_name, double *lat, double *lon);
+void getCoords(int postal, char *streetName, double *lat, double *lon);
 int compare(const void *a, const void *b);
 
 
 int main(void){
 
-    double ava_housing_lat, ava_housing_lon; 
-    double applicant_lat, applicant_lon;
-    double work_lat, work_lon;
+    double avaHousingLat, avaHousingLon; 
+    double applicantLat, applicantLon;
+    double workLat, workLon;
 
     // Available housing coordinates
-    get_coords(2450, "Sluseholmen", &ava_housing_lat, &ava_housing_lon);
+    getCoords(2450, "Sluseholmen", &avaHousingLat, &avaHousingLon);
 
     // Applicant coordinates
-    get_coords(2650, "Bymuren", &applicant_lat, &applicant_lon);
+    getCoords(2650, "Bymuren", &applicantLat, &applicantLon);
     
     // Applicant work-site coordinates
-    get_coords(2450, "Frederikskaj", &work_lat, &work_lon);
+    getCoords(2450, "Frederikskaj", &workLat, &workLon);
     
     // Distance between available housing and applicant
-    double distance = haversine(ava_housing_lat, ava_housing_lon, applicant_lat, applicant_lon);
+    double distance = calcDistKm(avaHousingLat, avaHousingLon, applicantLat, applicantLon);
     printf("Distance: %lf\n", distance);
 
     // Distance between available housing and work
-    double new_distance = haversine(ava_housing_lat, ava_housing_lon, work_lat, work_lon);
-    printf("New distance: %lf\n", new_distance);
+    double newDistance = calcDistKm(avaHousingLat, avaHousingLon, workLat, workLon);
+    printf("New distance: %lf\n", newDistance);
 
     // Calculate CO2 emissions
-    double pre_CO2 = CalculateEmissions(25600000000, "Car");
-    printf("CO2: %lf\n", pre_CO2);
+    double preCO2 = CalculateEmissions(25600000000, "Car");
+    printf("CO2: %lf\n", preCO2);
 
     // Calculate new CO2 emissions
-    double new_CO2 = CalculateEmissions(new_distance, "Car");
-    printf("New CO2: %lf\n", new_CO2);
+    double newCO2 = CalculateEmissions(newDistance, "Car");
+    printf("New CO2: %lf\n", newCO2);
 
 
-    Applicant *applicant_list = create_default_list();
+    Applicant *applicantList = createDefaultList();
 
-    qsort(applicant_list, 10, sizeof(Applicant), compare);
+    qsort(applicantList, 10, sizeof(Applicant), compare);
 
     for (int i = 0; i < 10; i++){
 
-        printf("ID: %d Postal: %d Distance: %lf Days on list: %d New CO2: %lf Pre CO2: %lf\n", applicant_list[i].id, applicant_list[i].postal, 
-                                    applicant_list[i].distance, applicant_list[i].days_on_list, 
-                                    applicant_list[i].new_CO2, applicant_list[i].pre_CO2);
+        printf("ID: %d Postal: %d Distance: %lf Days on list: %d New CO2: %lf Pre CO2: %lf\n", applicantList[i].id, applicantList[i].postal, 
+                                    applicantList[i].distance, applicantList[i].daysOnList, 
+                                    applicantList[i].newCO2, applicantList[i].preCO2);
     }
 
     return 0;
 }
 
-void get_coords(int postal, char *street_name, double *lat, double *lon) {
-    if (get_coordinates(postal, street_name, lat, lon) != 1) {
+void getCoords(int postal, char *streetName, double *lat, double *lon) {
+    if (getCoordinates(postal, streetName, lat, lon) != 1) {
         printf("Error retrieving coordinates\n");
     }
 }
@@ -67,7 +67,7 @@ int compare(const void *a, const void *b) {
     const Applicant *applicantB = (const Applicant *)b;
     // Postal is same, sort by days on list
     if ( applicantA->postal == applicantB->postal){
-        return applicantB->days_on_list - applicantA->days_on_list;
+        return applicantB->daysOnList - applicantA->daysOnList;
     }
     
     // Sort by distance

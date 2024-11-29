@@ -33,7 +33,7 @@ int main(void){
     printf("New distance: %lf\n", new_distance);
 
     // Calculate CO2 emissions
-    double pre_CO2 = CalculateEmissions(distance, "Car");
+    double pre_CO2 = CalculateEmissions(25600000000, "Car");
     printf("CO2: %lf\n", pre_CO2);
 
     // Calculate new CO2 emissions
@@ -43,7 +43,7 @@ int main(void){
 
     Applicant *applicant_list = create_default_list();
 
-    qsort(applicant_list, 3, sizeof(Applicant), compare);
+    qsort(applicant_list, 10, sizeof(Applicant), compare);
 
     for (int i = 0; i < 3; i++){
 

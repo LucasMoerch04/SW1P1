@@ -11,7 +11,29 @@ typedef struct Applicant{
     double newCO2;
     double preCO2;
 } Applicant;
+
+void addApplicants(Applicant *applicants, int *numApplicants);
+
  
+Applicant *createDefaultList(void){
+    Applicant *applicants = malloc(MAX_APPLICANTS * sizeof(Applicant));
+    if (applicants == NULL){
+        printf("Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    int numApplicants = 0;
+
+    addApplicants(applicants, &numApplicants);
+
+    for (int i = 0; i < numApplicants; i++){
+        printf("ID: %d, Postal: %d, Distance: %.2f, Days: %d, New CO2: %.2f, Pre CO2: %.2f\n",
+               applicants[i].id, applicants[i].postal, applicants[i].distance,
+               applicants[i].daysOnList, applicants[i].newCO2, applicants[i].preCO2);
+    }
+
+    return applicants;
+}
 
 void addApplicants(Applicant *applicants, int *numApplicants){
     int largestId = 0;
@@ -45,25 +67,3 @@ void addApplicants(Applicant *applicants, int *numApplicants){
     }
 }
 
-Applicant *createDefaultList(void){
-    Applicant *applicants = malloc(MAX_APPLICANTS * sizeof(Applicant));
-    if (applicants == NULL){
-        printf("Memory allocation failed\n");
-        exit(EXIT_FAILURE);
-    }
-
-    int numApplicants = 0;
-
-    addApplicants(applicants, &numApplicants);
-
-    for (int i = 0; i < numApplicants; i++){
-        printf("ID: %d, Postal: %d, Distance: %.2f, Days: %d, New CO2: %.2f, Pre CO2: %.2f\n",
-               applicants[i].id, applicants[i].postal, applicants[i].distance,
-               applicants[i].daysOnList, applicants[i].newCO2, applicants[i].preCO2);
-    }
-
-    int nrOfApplicants = get_list_size(numApplicants);
-    printf("\nAmount: %d\n", nrOfApplicants);
-
-    return applicants;
-}

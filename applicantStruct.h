@@ -19,10 +19,10 @@ typedef struct Applicant{
 
 
 // Function prototypes
-Applicant *createDefaultList(void);
-int getListSize(Applicant *applicants);
-void addApplicants(Applicant *applicantArray, int *numApplicants, const char *filePath, 
-                  int postal, double distance, int daysOnList, double newCO2, double preCO2);
+Applicant *makeApplicantsArray(int *numApplicants);
+void readApplicantsList(Applicant *applicantArray, int *numApplicants);
+void newApplicant(int *numApplicants, int postal, double distance, int daysOnList, double newCO2, double preCO2);
+
 
 
 

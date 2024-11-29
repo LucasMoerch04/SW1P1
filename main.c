@@ -14,38 +14,48 @@ int main(void){
     double avaHousingLat, avaHousingLon; 
     double applicantLat, applicantLon;
     double workLat, workLon;
+    int numApplicants = 0;
+    char answer;
+    printf("test");
+    Applicant *applicantList = makeApplicantsArray(&numApplicants);
 
-    // Available housing coordinates
-    getCoords(2450, "Sluseholmen", &avaHousingLat, &avaHousingLon);
-
-    // Applicant coordinates
-    getCoords(2650, "Bymuren", &applicantLat, &applicantLon);
-    
-    // Applicant work-site coordinates
-    getCoords(2450, "Frederikskaj", &workLat, &workLon);
-    
-    // Distance between available housing and applicant
-    double distance = calcDistKm(avaHousingLat, avaHousingLon, applicantLat, applicantLon);
-    printf("Distance: %lf\n", distance);
-
-    // Distance between available housing and work
-    double newDistance = calcDistKm(avaHousingLat, avaHousingLon, workLat, workLon);
-    printf("New distance: %lf\n", newDistance);
-
-    // Calculate CO2 emissions
-    double preCO2 = CalculateEmissions(25600000000, "Car");
-    printf("CO2: %lf\n", preCO2);
-
-    // Calculate new CO2 emissions
-    double newCO2 = CalculateEmissions(newDistance, "Car");
-    printf("New CO2: %lf\n", newCO2);
+    printf("Tilføj ansøger? (y/n)\n");
+    scanf(" %c", &answer);
 
 
-    Applicant *applicantList = createDefaultList();
 
-    qsort(applicantList, 10, sizeof(Applicant), compare);
+    if (answer == 'y'){
+            // Available housing coordinates
+        getCoords(2450, "Sluseholmen", &avaHousingLat, &avaHousingLon);
 
-    for (int i = 0; i < 10; i++){
+        // Applicant coordinates
+        getCoords(2650, "Bymuren", &applicantLat, &applicantLon);
+        
+        // Applicant work-site coordinates
+        getCoords(2450, "Frederikskaj", &workLat, &workLon);
+        
+        // Distance between available housing and applicant
+        double distance = calcDistKm(avaHousingLat, avaHousingLon, applicantLat, applicantLon);
+        printf("Distance: %lf\n", distance);
+
+        // Distance between available housing and work
+        double newDistance = calcDistKm(avaHousingLat, avaHousingLon, workLat, workLon);
+        printf("New distance: %lf\n", newDistance);
+
+        // Calculate CO2 emissions
+        double preCO2 = CalculateEmissions(25600000000, "Car");
+        printf("CO2: %lf\n", preCO2);
+
+        // Calculate new CO2 emissions
+        double newCO2 = CalculateEmissions(newDistance, "Car");
+        printf("New CO2: %lf\n", newCO2);
+
+        newApplicant(numApplicants, 2650, distance, 0, newCO2, preCO2);
+    }
+
+    qsort(applicantList, numApplicants, sizeof(Applicant), compare);
+
+    for (int i = 0; i < numApplicants; i++){
 
         printf("ID: %d Postal: %d Distance: %lf Days on list: %d New CO2: %lf Pre CO2: %lf\n", applicantList[i].id, applicantList[i].postal, 
                                     applicantList[i].distance, applicantList[i].daysOnList, 

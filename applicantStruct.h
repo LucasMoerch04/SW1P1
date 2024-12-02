@@ -18,7 +18,7 @@ typedef struct Applicant{
     double distanceNew;
     double CO2Current;
     double CO2New;
-   
+    double CO2Savings;
 } Applicant;
 
 

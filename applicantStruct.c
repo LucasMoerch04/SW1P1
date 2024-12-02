@@ -15,6 +15,7 @@ typedef struct Applicant{
     double distanceNew;
     double CO2Current;
     double CO2New;
+    double CO2Savings;
    
 } Applicant;
 
@@ -53,7 +54,7 @@ void readApplicantsList(Applicant *applicants, int *numApplicants){
             }
             // add applicant to array
             applicants[*numApplicants] = (Applicant){id, postalTemp,xCoordHomeTemp, yCoordHomeTemp, xCoordOccTemp, yCoordOccTemp, 
-                                                     daysOnListTemp, 0, 0, 0.0, 0.0 };
+                                                     daysOnListTemp, 0, 0, 0.0, 0.0, 0.0 };
             // 
             (*numApplicants)++;
             if (*numApplicants >= MAX_APPLICANTS){

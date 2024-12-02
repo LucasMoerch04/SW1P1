@@ -60,8 +60,7 @@ int main(void){
         occupationPostal = 9400;
 
         for (int i = 0; i < numApplicants; i++){
-            printf("HER%lf", applicantList[i].xCoordOcc);
-            double distanceCurrent = calcDistKm(applicantList[i].yCoordHome, applicantList[i].xCoordHome, applicantList[i].xCoordOcc, applicantList[i].yCoordOcc);
+            double distanceCurrent = calcDistKm(applicantList[i].xCoordHome, applicantList[i].yCoordHome, applicantList[i].xCoordOcc, applicantList[i].yCoordOcc);
             // Distance between available housing and work
             double distanceNew = calcDistKm(avaHousingLat, avaHousingLon, applicantList[i].xCoordOcc, applicantList[i].yCoordOcc);
 
@@ -71,16 +70,18 @@ int main(void){
             // Calculate new CO2 emissions
             double CO2New = CalculateEmissions(distanceNew, "Car");
 
+            double CO2Savings = CO2Current - CO2New;
+
             // update applicant to array
             applicantList[i] = (Applicant){applicantList[i].id, applicantList[i].postal, applicantList[i].xCoordHome, applicantList[i].yCoordHome, applicantList[i].xCoordOcc, applicantList[i].yCoordOcc,
-                      applicantList[i].daysOnList, distanceCurrent, distanceNew, CO2Current, CO2New};
+                                                                applicantList[i].daysOnList, distanceCurrent, distanceNew, CO2Current, CO2New, CO2Savings};
         }
     
         // Create sorted list
         qsort(applicantList, numApplicants, sizeof(Applicant), compare);
         for (int i = 0; i < numApplicants; i++){
-        printf("\nID: %d Postal: %d HomeCOORDS: %lf %lf OccCOORDS: %lf %lf DaysOnList: %d DistanceCURRENT: %lf DistanceNEW: %lf %lf %lf\n", applicantList[i].id, applicantList[i].postal, applicantList[i].xCoordHome, applicantList[i].yCoordHome, applicantList[i].xCoordOcc, applicantList[i].yCoordOcc,
-                      applicantList[i].daysOnList, applicantList[i].distanceCurrent, applicantList[i].distanceNew, applicantList[i].CO2Current, applicantList[i].CO2New);
+        printf("\nID: %d Postal: %d Days On List: %d DistanceCURRENT: %.2lf DistanceNEW: %.2lf CO2 SAVED: %lf\n", applicantList[i].id, applicantList[i].postal,
+                                                                                                                                            applicantList[i].daysOnList, applicantList[i].distanceCurrent, applicantList[i].distanceNew,  applicantList[i].CO2Savings);
     }
     }
 
@@ -95,25 +96,27 @@ void getCoords(int postal, char *streetName, double *lat, double *lon) {
 
 
 int compare(const void *a, const void *b) {
+    // Cast the input pointers
     const Applicant *applicantA = (const Applicant *)a;
     const Applicant *applicantB = (const Applicant *)b;
 
-    if (applicantA->postal == occupationPostal){
-        return -1;
-    }
+    // Calculate the difference in CO2Savings between the two applicants
+    double CO2Diff = applicantA->CO2Savings - applicantB->CO2Savings;
     
-    if (applicantB->postal == occupationPostal) {
-        return 1; // Lower priority
+    // If difference in CO2Savings is small (less than 0.5), prioritize by daysOnList
+    if (CO2Diff > -0.5 && CO2Diff < 0.5){
+        return applicantB->daysOnList - applicantA->daysOnList;  // Most days on list comes first
     }
 
-    // Postal is same, sort by days on list
-    if ( applicantA->postal == applicantB->postal){
-        return applicantB->daysOnList - applicantA->daysOnList;
+    // The applicant with most CO2 Saving is prioritized
+    if (applicantA->CO2Savings > applicantB->CO2Savings){
+        return 1;
     }
-    
-    // Sort by distance
-    if (applicantA->distanceCurrent < applicantB->distanceCurrent) return 1;
-    if (applicantA->distanceCurrent > applicantB->distanceCurrent) return -1;
+
+    if (applicantA->CO2Savings < applicantB->CO2Savings){
+        return -1;  
+    }
 
     return 0;
 }
+

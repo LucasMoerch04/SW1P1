@@ -3,157 +3,205 @@
 #include <string.h>
 #include <ctype.h>
 
-#define NAME_LENGTH 50
+#define NAME_LENGTH 1000
+#define POST_LENGTH 10
 
-//to implement color
-#define Green "\e[0;32m"
-#define White "\e[0;37m"
-#define Cyan "\e[0;36m"
-#define BoldPurple "\e[1;35m"
+//colors with underline
+#define UBLK "\e[4;30m"
+#define URED "\e[4;31m"
+#define UGRN "\e[4;32m"
+#define UYEL "\e[4;33m"
+#define UBLU "\e[4;34m"
+#define UMAG "\e[4;35m"
+#define UCYN "\e[4;36m"
+#define UWHT "\e[4;37m"
+#define COLOR_RESET "\e[0m"
 
-int getInputs(void);
+void getInputHome(int *postal, char *streetName);
+void getInputOccupation(int *postal, char *streetName);
+void getInputHousing(int *postal, char *streetName);
 int isValidPostal(const char *postal);
 int isValidStreetName(const char *name);
-void clearBuffer(void);
 
 
-int getInputs(void){
-    char *streetName[NAME_LENGTH];
-    char buffer[NAME_LENGTH];
-    char postalH[10];
-    char postalO[10];
-    int post[2];
+void getInputHome(int *postal, char *streetName){
+    char streetNameH[NAME_LENGTH];
+    char postalH[POST_LENGTH];
 
-//current housing
     int valid = 0;
-    int Bool = 1;
+    int bool = 1;
+
+//postal
+    
+    printf("To apply for hoursing we must know your %scurrent address%s.\n", UGRN, COLOR_RESET);
 
     while (!valid){ 
-        printf("%sTo apply for hoursing we must know your current address. \nFirst, enter%s postal code%s, and then%s road name%s.\n", Green, BoldPurple, Green, BoldPurple, Green);
-        printf("%sEnter postal code for current address: ", White);
+        printf("Enter %spostal code%s for current address: ", UGRN, COLOR_RESET);
 
         if (fgets(postalH, sizeof(postalH), stdin)){
-            postalH[strcspn(postalH, "\n")] = '\0';
-            clearBuffer();
+            postalH[strcspn(postalH, "\n")] = '\0'; //erstatte \n med \0
 
             if (isValidPostal(postalH)){
                 valid = 1;
-            } else{
-                printf("Invalid input. Make sure to enter exactly four digits.\n");
+            }else{
+                printf("%sInvalid input. Make sure to enter exactly four digits.%s\n", URED, COLOR_RESET);
             }
-        } else{
-            printf("Failed to read.\n");
-            clearBuffer();
+        }else{
+            printf("%sFailed to read.\n%s",URED, COLOR_RESET);
         }
     }
 
-    post[0] = atoi(postalH); // atoi -> string to int
+    *postal = atoi(postalH); //atoi -> string to int
 
-    printf("Enter road name for current address: ");
-    scanf(" %[^\n]", buffer);
-    clearBuffer();
+//streetname
 
-    while (Bool){
-        for (int i = 0; i <= NAME_LENGTH; i++){
-            if (buffer[i] == EOF){
-                i = NAME_LENGTH;
+    while (bool){
+        printf("Enter %sroad name%s for current address: ", UGRN, COLOR_RESET);
+        if (fgets(streetNameH, sizeof(streetNameH), stdin)){
+                streetNameH[strcspn(streetNameH, "\n")] = '\0';
+
+            if (isValidStreetName(streetNameH)){
+                bool = 0;
+            }else{
+                printf("%sInvalid input. Enter again.%s\n", URED, COLOR_RESET);
             }
-            if (isdigit(buffer[i])){
-                i = 0;
-                printf("Invalid input. Enter again.\n");
-                printf("Enter road name for current address: "); 
-                scanf(" %[^\n]", buffer);
-            } else{
-                Bool = 0;
-            }
+        }else{
+            printf("%sFailed to read.%s\n", URED, COLOR_RESET);
         }
     }
+    strcpy(streetName, streetNameH);
+}
 
-    streetName[0] = malloc(strlen(buffer) + 1); // +1 for \0
-    if (streetName[0] == NULL){
-        printf("Error: Unable to allocate memory!\n");
-        return 1;
-    }
+void getInputOccupation(int *postal, char *streetName){
+    char streetNameO[NAME_LENGTH];
+    char postalO[POST_LENGTH];
 
-    strcpy(streetName[0], buffer);
-    printf("%d, %s\n\n", post[0], streetName[0]);
+    int valid = 0;
+    int bool = 1;
 
-
-//occupation
-    valid = 0;
-    Bool = 1;
+//postal
+    
+    printf("To apply for hoursing we must know your %soccupation's address%s.\n", UBLU, COLOR_RESET);
 
     while (!valid){ 
-        printf("%sTo apply for hoursing we must know your occupation's address. \nFirst, enter%s postal code%s, and then%s road name%s.\n", Green, BoldPurple, Green, BoldPurple, Green);
-        printf("%sEnter postal code for occupation's address: ", White);
+        printf("Enter %spostal code%s for occupation's address: ", UBLU, COLOR_RESET);
 
         if (fgets(postalO, sizeof(postalO), stdin)){
-            postalO[strcspn(postalO, "\n")] = '\0';
+            postalO[strcspn(postalO, "\n")] = '\0'; //erstatte \n med \0
 
             if (isValidPostal(postalO)){
                 valid = 1;
             }else{
-                printf("Invalid input. Make sure to enter exactly four digits.\n");
+                printf("%sInvalid input. Make sure to enter exactly four digits.%s\n", URED, COLOR_RESET);
             }
         }else{
-            printf("Failed to read.\n");
+            printf("%sFailed to read.%s\n", URED, COLOR_RESET);
         }
     }
 
-    post[1] = atoi(postalO); // atoi -> string to int
+    *postal = atoi(postalO); //atoi -> string to int
 
-    printf("Enter road name for occupation's address: ");
-    if (fgets(buffer, sizeof(buffer), stdin)) {
-        buffer[strcspn(buffer, "\n")] = '\0'; // Fjern '\n'
-        if (strlen(buffer) == 0) {
-            printf("Road name cannot be empty. Please try again.\n");
-        } else if (!isValidStreetName(buffer)) {
-            printf("Invalid input. Road name must contain letters.\n");
-        } else {
-            valid = 1; // Input er gyldigt
+//streetname
+
+    while (bool){
+        printf("Enter %sroad name%s for occupation's address: ", UBLU, COLOR_RESET);
+        if (fgets(streetNameO, sizeof(streetNameO), stdin)){
+                streetNameO[strcspn(streetNameO, "\n")] = '\0';
+
+            if (isValidStreetName(streetNameO)){
+                bool = 0;
+            }else{
+                printf("%sInvalid input. Enter again.%s\n", URED, COLOR_RESET);
+            }
+        }else{
+            printf("%sFailed to read.%s\n", URED, COLOR_RESET);
         }
-    } else {
-        printf("Failed to read input. Please try again.\n");
-        clearBuffer(); // Ryd buffer
+    }
+    strcpy(streetName, streetNameO);
+}
+
+void getInputHousing(int *postal, char *streetName){
+    char streetNameH[NAME_LENGTH];
+    char postalH[POST_LENGTH];
+
+    int valid = 0;
+    int bool = 1;
+
+//postal
+    
+    printf("To apply for hoursing we must know the address for the %sdesired housing%s.\n", UMAG, COLOR_RESET);
+
+    while (!valid){ 
+        printf("Enter %spostal code%s for the address for the desired housing: ", UMAG, COLOR_RESET);
+
+        if (fgets(postalH, sizeof(postalH), stdin)){
+            postalH[strcspn(postalH, "\n")] = '\0'; //erstatte \n med \0
+
+            if (isValidPostal(postalH)){
+                valid = 1;
+            }else{
+                printf("%sInvalid input. Make sure to enter exactly four digits.%s\n", URED, COLOR_RESET);
+            }
+        }else{
+            printf("%sFailed to read.%s\n", URED, COLOR_RESET);
+        }
     }
 
-    streetName[1] = malloc(strlen(buffer) + 1); // +1 for \0
-    if (streetName[1] == NULL){
-        printf("Error: Unable to allocate memory!\n");
-        return 1;
+    *postal = atoi(postalH); //atoi -> string to int
+
+//streetname
+
+    while (bool){
+        printf("Enter %sroad name%s for the address for the desired housing: ", UMAG, COLOR_RESET);
+        if (fgets(streetNameH, sizeof(streetNameH), stdin)){
+                streetNameH[strcspn(streetNameH, "\n")] = '\0';
+
+            if (isValidStreetName(streetNameH)){
+                bool = 0;
+            }else{
+                printf("%sInvalid input. Enter again.%s\n", URED, COLOR_RESET);
+            }
+        }else{
+            printf("%sFailed to read.%s\n", URED, COLOR_RESET);
+        }
     }
-
-    strcpy(streetName[1], buffer);
-
-    printf("housing: %d, %s\noccupation: %d, %s", post[0], streetName[0], post[1], streetName[1]);
+    strcpy(streetName, streetNameH);
 }
 
 int isValidPostal(const char *postal){
-    if (postal == NULL || strlen(postal) == 0 || strlen(postal) != 4){
+    if (postal == NULL || strlen(postal) != 4){ //tjekker om der er indhold i strengen og om længden af strengen svarer til 4
         return 0;
     }
 
     for (int i = 0; i < 4; i++){
-        if (!isdigit(postal[i])){
+        if (!isdigit(postal[i])){ //tjekker om hvert enekelte karakter er et tal
             return 0; 
         }
     }
     return 1;
 }
 
-int isValidStreetName(const char *name) {
+int isValidStreetName(const char *name){
+    int containsLetter = 0;
+
     if (name == NULL || strlen(name) == 0) {
         return 0; // Tomt input
     }
+
     for (int i = 0; name[i] != '\0'; i++) {
         if (isalpha(name[i])) {
-            return 1; // Indeholder bogstaver
+            containsLetter = 1; // Fundet et bogstav
+        } else if (name[i] != '.' && name[i] != ' ') {
+            return 0; // Indeholder ugyldige tegn
         }
     }
-    return 0; // Ingen bogstaver
-}
+    return containsLetter; // Gyldigt hvis mindst ét bogstav er fundet
 
-void clearBuffer(void){
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);  // Tømmer bufferen
+    /*return containsLetter; // Gyldigt hvis mindst ét bogstav er fundet
+    for (int i = 0; name[i] != '\0'; i++) {
+        if (!isalpha(name[i]) && name[i] != '.' && name[i] != ' ') {
+            return 0; // Indeholder ugyldige tegn
+        } 
+    }
+    return 1; //hvis der ikke er nogle tal og strengen ikke er tom*/
 }

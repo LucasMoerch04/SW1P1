@@ -4,9 +4,12 @@
 #include "applicantStruct.h"
 #include "distance.h"
 #include "co2.h"
+#include "getInputs.h"
 
 void getCoords(int postal, char *streetName, double *lat, double *lon);
 int compare(const void *a, const void *b);
+
+int occupationPostal = 0;
 
 
 int main(void){
@@ -22,44 +25,63 @@ int main(void){
     printf("Tilføj ansøger? (y/n)\n");
     scanf(" %c", &answer);
 
+    
+
+    // Call func to calculate data and insert to newApplicant()
+
 
 
     if (answer == 'y'){
-            // Available housing coordinates
-        getCoords(2450, "Sluseholmen", &avaHousingLat, &avaHousingLon);
+            
+        int homePostal;
+        char homeStreet[NAME_LENGTH]; // Allocate space for the street name
+        int occPostal;
+        char occStreet[NAME_LENGTH];  // Allocate space for the street name
+
+        // Get inputs
+        getInputHome(&homePostal, homeStreet); // Pass address of homePostal
+        getInputOccupation(&occPostal, occStreet); // Pass address of occPostal
 
         // Applicant coordinates
-        getCoords(2650, "Bymuren", &applicantLat, &applicantLon);
+        getCoords(homePostal, homeStreet, &applicantLat, &applicantLon);
         
         // Applicant work-site coordinates
-        getCoords(2450, "Frederikskaj", &workLat, &workLon);
+        getCoords(occPostal, occStreet, &workLat, &workLon);
         
-        // Distance between available housing and applicant
-        double distance = calcDistKm(avaHousingLat, avaHousingLon, applicantLat, applicantLon);
-        printf("Distance: %lf\n", distance);
+        
+        newApplicant(numApplicants, homePostal, applicantLat, applicantLon, workLat, workLon, 0);
 
-        // Distance between available housing and work
-        double newDistance = calcDistKm(avaHousingLat, avaHousingLon, workLat, workLon);
-        printf("New distance: %lf\n", newDistance);
+    } else if(answer == 'n'){
+        int avaPostal;
+        char avaStreet[NAME_LENGTH];
+        // Get input for available housing
+        getInputHousing(&avaPostal, avaStreet);
+        getCoords(avaPostal, avaStreet, &avaHousingLat, &avaHousingLon);
+        occupationPostal = 9400;
 
-        // Calculate CO2 emissions
-        double preCO2 = CalculateEmissions(25600000000, "Car");
-        printf("CO2: %lf\n", preCO2);
+        for (int i = 0; i < numApplicants; i++){
+            printf("HER%lf", applicantList[i].xCoordOcc);
+            double distanceCurrent = calcDistKm(applicantList[i].yCoordHome, applicantList[i].xCoordHome, applicantList[i].xCoordOcc, applicantList[i].yCoordOcc);
+            // Distance between available housing and work
+            double distanceNew = calcDistKm(avaHousingLat, avaHousingLon, applicantList[i].xCoordOcc, applicantList[i].yCoordOcc);
 
-        // Calculate new CO2 emissions
-        double newCO2 = CalculateEmissions(newDistance, "Car");
-        printf("New CO2: %lf\n", newCO2);
+            // Calculate CO2 emissions
+            double CO2Current = CalculateEmissions(distanceCurrent, "Car");
 
-        newApplicant(numApplicants, 2650, distance, 0, newCO2, preCO2);
+            // Calculate new CO2 emissions
+            double CO2New = CalculateEmissions(distanceNew, "Car");
+
+            // update applicant to array
+            applicantList[i] = (Applicant){applicantList[i].id, applicantList[i].postal, applicantList[i].xCoordHome, applicantList[i].yCoordHome, applicantList[i].xCoordOcc, applicantList[i].yCoordOcc,
+                      applicantList[i].daysOnList, distanceCurrent, distanceNew, CO2Current, CO2New};
+        }
+    
+        // Create sorted list
+        qsort(applicantList, numApplicants, sizeof(Applicant), compare);
+        for (int i = 0; i < numApplicants; i++){
+        printf("\nID: %d Postal: %d HomeCOORDS: %lf %lf OccCOORDS: %lf %lf DaysOnList: %d DistanceCURRENT: %lf DistanceNEW: %lf %lf %lf\n", applicantList[i].id, applicantList[i].postal, applicantList[i].xCoordHome, applicantList[i].yCoordHome, applicantList[i].xCoordOcc, applicantList[i].yCoordOcc,
+                      applicantList[i].daysOnList, applicantList[i].distanceCurrent, applicantList[i].distanceNew, applicantList[i].CO2Current, applicantList[i].CO2New);
     }
-
-    qsort(applicantList, numApplicants, sizeof(Applicant), compare);
-
-    for (int i = 0; i < numApplicants; i++){
-
-        printf("ID: %d Postal: %d Distance: %lf Days on list: %d New CO2: %lf Pre CO2: %lf\n", applicantList[i].id, applicantList[i].postal, 
-                                    applicantList[i].distance, applicantList[i].daysOnList, 
-                                    applicantList[i].newCO2, applicantList[i].preCO2);
     }
 
     return 0;
@@ -75,13 +97,23 @@ void getCoords(int postal, char *streetName, double *lat, double *lon) {
 int compare(const void *a, const void *b) {
     const Applicant *applicantA = (const Applicant *)a;
     const Applicant *applicantB = (const Applicant *)b;
+
+    if (applicantA->postal == occupationPostal){
+        return -1;
+    }
+    
+    if (applicantB->postal == occupationPostal) {
+        return 1; // Lower priority
+    }
+
     // Postal is same, sort by days on list
     if ( applicantA->postal == applicantB->postal){
         return applicantB->daysOnList - applicantA->daysOnList;
     }
     
     // Sort by distance
-    if (applicantA->distance < applicantB->distance) return -1;
-    if (applicantA->distance > applicantB->distance) return 1;
+    if (applicantA->distanceCurrent < applicantB->distanceCurrent) return 1;
+    if (applicantA->distanceCurrent > applicantB->distanceCurrent) return -1;
+
     return 0;
 }

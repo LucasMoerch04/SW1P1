@@ -9,21 +9,24 @@
 typedef struct Applicant{
     int id;
     int postal;
-    double distance;
+    double xCoordHome;
+    double yCoordHome;
+    double xCoordOcc;
+    double yCoordOcc;
     int daysOnList;
-    double newCO2;
-    double preCO2;
-    
+    double distanceCurrent;
+    double distanceNew;
+    double CO2Current;
+    double CO2New;
+   
 } Applicant;
 
 
 
 // Function prototypes
 Applicant *makeApplicantsArray(int *numApplicants);
-void readApplicantsList(Applicant *applicantArray, int *numApplicants);
-void newApplicant(int *numApplicants, int postal, double distance, int daysOnList, double newCO2, double preCO2);
-
-
+void readApplicantsList(Applicant *applicants, int *numApplicants);
+void newApplicant(int numApplicants, int postal, double xCoordHome, double yCoordHome, double xCoordOcc, double yCoordOcc, int daysOnList);
 
 
 #endif 

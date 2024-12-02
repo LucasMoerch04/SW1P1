@@ -9,7 +9,7 @@ find_package(cJSON REQUIRED)
 configure_file(applicants.txt applicants.txt COPYONLY)
 
 
-add_executable(MyProject main.c retrieveAPI.h retrieveAPI.c applicantStruct.h applicantStruct.c co2.h co2.c distance.h distance.c)
+add_executable(MyProject main.c retrieveAPI.h retrieveAPI.c applicantStruct.h applicantStruct.c co2.h co2.c distance.h distance.c getInputs.c getInputs.h)
 
 target_link_libraries(MyProject cjson CURL::libcurl)
 

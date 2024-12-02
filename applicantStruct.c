@@ -6,14 +6,21 @@
 typedef struct Applicant{
     int id;
     int postal;
-    double distance;
+    double xCoordHome;
+    double yCoordHome;
+    double xCoordOcc;
+    double yCoordOcc;
     int daysOnList;
-    double newCO2;
-    double preCO2;
+    double distanceCurrent;
+    double distanceNew;
+    double CO2Current;
+    double CO2New;
+   
 } Applicant;
 
 void readApplicantsList(Applicant *applicants, int *numApplicants);
-void newApplicant(int numApplicants, int postal, double distance, int daysOnList, double newCO2, double preCO2);
+void newApplicant(int numApplicants, int postal, double xCoordHome, double yCoordHome, double xCoordOcc, double yCoordOcc, int daysOnList);
+
 
 
 Applicant *makeApplicantsArray(int *numApplicants){
@@ -23,7 +30,6 @@ Applicant *makeApplicantsArray(int *numApplicants){
         exit(EXIT_FAILURE);
     }
 
-    
     readApplicantsList(applicants, numApplicants);
 
     return applicants;
@@ -33,21 +39,21 @@ void readApplicantsList(Applicant *applicants, int *numApplicants){
     int largestId = 0;
 
     // Open txt file
-    const char *filePath = "applicants.txt";
+    const char *filePath = "../applicants.txt";
     FILE *file = fopen(filePath, "r");
 
     if (file){
-        int id, postalTemp, daysOnListTemp;
-        double distanceTemp, newCO2Temp, preCO2Temp;
+        int id, postalTemp, daysOnListTemp, distanceCurrentTemp, distanceNewTemp;
+        double xCoordHomeTemp, yCoordHomeTemp, xCoordOccTemp, yCoordOccTemp, CO2CurrentTemp, CO2NewTemp;
 
-        while (fscanf(file, "%d %d %lf %d %lf %lf", &id, &postalTemp, &distanceTemp, 
-                      &daysOnListTemp, &newCO2Temp, &preCO2Temp) == 6){
+        while (fscanf(file, "%d %d %lf %lf %lf %lf %d", &id, &postalTemp, &xCoordHomeTemp, &yCoordHomeTemp, &xCoordOccTemp, &yCoordOccTemp,
+                      &daysOnListTemp) == 7){
             if (id > largestId){
                 largestId = id;
             }
             // add applicant to array
-            applicants[*numApplicants] = (Applicant){id, postalTemp, distanceTemp, 
-                                                     daysOnListTemp, newCO2Temp, preCO2Temp};
+            applicants[*numApplicants] = (Applicant){id, postalTemp,xCoordHomeTemp, yCoordHomeTemp, xCoordOccTemp, yCoordOccTemp, 
+                                                     daysOnListTemp, 0, 0, 0.0, 0.0 };
             // 
             (*numApplicants)++;
             if (*numApplicants >= MAX_APPLICANTS){
@@ -56,17 +62,18 @@ void readApplicantsList(Applicant *applicants, int *numApplicants){
             }
         }
         fclose(file);
+        printf("%d", *numApplicants);
     } else{
         printf("File not found. Starting IDs from 1.\n");
     }
 }
 
-void newApplicant(int numApplicants, int postal, double distance, int daysOnList, double newCO2, double preCO2){
-    FILE *file = fopen("applicants.txt", "a");
+void newApplicant(int numApplicants, int postal, double xCoordHome, double yCoordHome, double xCoordOcc, double yCoordOcc, int daysOnList){
+    FILE *file = fopen("../applicants.txt", "a");
     int id = numApplicants + 1;
 
     if (file){
-        fprintf(file, "\n%d %d %lf %d %lf %lf", id, postal, distance, daysOnList, newCO2, preCO2);
+        fprintf(file, "\n%d %d %lf %lf %lf %lf %d", id, postal, xCoordHome, yCoordHome, xCoordOcc, yCoordOcc, daysOnList);
         printf("applicatn added\n");
     }
     fclose(file);

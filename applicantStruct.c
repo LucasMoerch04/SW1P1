@@ -75,7 +75,7 @@ void newApplicant(int numApplicants, int postal, double xCoordHome, double yCoor
 
     if (file){
         fprintf(file, "\n%d %d %lf %lf %lf %lf %d", id, postal, xCoordHome, yCoordHome, xCoordOcc, yCoordOcc, daysOnList);
-        printf("applicatn added\n");
+        printf("Applicant added with ID: %d\n", id);
     }
     fclose(file);
 }

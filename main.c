@@ -8,13 +8,14 @@
 #include "CuTest.h"
 #include "runTests.h"
 
-void addNewApplicant(int numApplicants);
-void waitListByCO2(Applicant *applicants, int numApplicants);
-
+void addNewApplicant(int numApplicants, int largestId);
+void waitListByCO2(Applicant *applicantList, int numApplicants);
 void getCoords(int postal, char *streetName, double *lat, double *lon);
 int compareByCO2(const void *a, const void *b);
 int compareBySeniority(const void *a, const void *b);
 void outputList(Applicant *applicantList, int numApplicants, int status);
+void sortBySolution(Applicant *applicantList, int numApplicants, int turn, int index);
+int isEven(int number);
 
 
 int main(void){
@@ -25,18 +26,20 @@ int main(void){
     double applicantLat, applicantLon;
     double workLat, workLon;
     int numApplicants = 0;
+    int largestId = 0;
     char answer;
-    Applicant *applicantList = makeApplicantsArray(&numApplicants);
+    Applicant *applicantList = makeApplicantsArray(&numApplicants, &largestId);
 
     printf("Tast 1 for at tilføje en ansøger\n");
     printf("Tast 2 for at printe ventelisten, baseret på CO2 besparelse\n");
     printf("Tast 3 for at printe ventelisten, baseret på ventetid\n");
+    printf("Tast 4 for at printe ventelisten, baseret på VORES LØSNING IDK\n");
     printf("Tast q for at slutte programmet\n");
 
     scanf(" %c", &answer);
     
     if (answer == '1'){
-        addNewApplicant(numApplicants);
+        addNewApplicant(numApplicants, largestId);
         
     } else if(answer == '2'){
         waitListByCO2(applicantList, numApplicants);
@@ -46,12 +49,28 @@ int main(void){
     } else if(answer == '3'){
         qsort(applicantList, numApplicants, sizeof(Applicant), compareBySeniority);
         outputList(applicantList, numApplicants, 0);
+
+    } else if(answer == '4'){
+        char next = 'y';
+        int turn = 1;
+        int index = 0;
+        waitListByCO2(applicantList, numApplicants); //Initiate array
+
+        do {
+            sortBySolution(applicantList, numApplicants, turn, index);
+            printf("Want next applicant? (y/n) ");
+            scanf(" %c", &next);
+            turn++;
+            if (!isEven(turn)){ // Only increment index every other turn
+                index++;
+            }
+        } while (next == 'y');
     }
 
     return 0;
 }
 
-void addNewApplicant(int numApplicants){
+void addNewApplicant(int numApplicants, int largestId){
     double applicantLat, applicantLon;
     double workLat, workLon;
 
@@ -70,7 +89,7 @@ void addNewApplicant(int numApplicants){
     // Applicant work-site coordinates
     getCoords(occPostal, occStreet, &workLat, &workLon);
     
-    newApplicant(numApplicants, homePostal, applicantLat, applicantLon, workLat, workLon, 0);
+    newApplicant(largestId, numApplicants, homePostal, applicantLat, applicantLon, workLat, workLon, 0);
 }
 
 void waitListByCO2(Applicant *applicantList, int numApplicants){
@@ -114,7 +133,7 @@ int compareByCO2(const void *a, const void *b){
     const Applicant *applicantA = (const Applicant *)a;
     const Applicant *applicantB = (const Applicant *)b;
 
-    // Calculate the difference in CO2Savings between the two applicants
+    // Calculate the difference in CO2Savings between the two applicantList
     double CO2Diff = applicantA->CO2Savings - applicantB->CO2Savings;
     
     // If difference in CO2Savings is small (less than 0.5), prioritize by daysOnList
@@ -141,17 +160,35 @@ int compareBySeniority(const void *a, const void *b){
     return applicantB->daysOnList - applicantA->daysOnList;
 }
 
+// Function to give out next applicant based on turn is even or odd
+void sortBySolution(Applicant *applicantList, int numApplicants, int turn, int index){
+    if (isEven(turn)){
+        qsort(applicantList, numApplicants, sizeof(Applicant), compareBySeniority);
+        printf("Next applicant in line is: (Based on days on waitlist)\n");
+        printf("\n%d | ID: %d Postal: %d Days On List: %d\n", turn, applicantList[index].id, applicantList[index].postal, applicantList[index].daysOnList);
+        
+    } else {
+        qsort(applicantList, numApplicants, sizeof(Applicant), compareByCO2);
+        printf("Next applicant in line is: (Based on CO2 savings)\n");
+        printf("\n%d | ID: %d Postal: %d Days On List: %d DistanceCURRENT: %.2lf DistanceNEW: %.2lf CO2 SAVED: %lf\n", turn, applicantList[index].id, applicantList[index].postal, applicantList[index].daysOnList, applicantList[index].distanceCurrent, applicantList[index].distanceNew, applicantList[index].CO2Savings);           
+    }
+}
+
+int isEven(int number){
+    return number % 2 == 0;
+}
+
+
+// Status indicates information given in outputs (1 for information about distance and CO2)
 void outputList(Applicant *applicantList, int numApplicants, int status){
     if (status == 1){
         for (int i = 0; i < numApplicants; i++){
-            printf("\nID: %d Postal: %d Days On List: %d DistanceCURRENT: %.2lf DistanceNEW: %.2lf CO2 SAVED: %lf\n", applicantList[i].id, applicantList[i].postal, applicantList[i].daysOnList, applicantList[i].distanceCurrent, applicantList[i].distanceNew, applicantList[i].CO2Savings);           
+            printf("\n%d | ID: %d Postal: %d Days On List: %d DistanceCURRENT: %.2lf DistanceNEW: %.2lf CO2 SAVED: %lf\n", i, applicantList[i].id, applicantList[i].postal, applicantList[i].daysOnList, applicantList[i].distanceCurrent, applicantList[i].distanceNew, applicantList[i].CO2Savings);           
         }   
     }
     else {
         for (int i = 0; i < numApplicants; i++){
-            printf("\nID: %d Postal: %d Days On List: %d\n", applicantList[i].id, applicantList[i].postal, applicantList[i].daysOnList);           
+            printf("\n%d | ID: %d Postal: %d Days On List: %d\n", i, applicantList[i].id, applicantList[i].postal, applicantList[i].daysOnList);           
         }   
     }
 }
-
-

@@ -12,14 +12,12 @@ struct MemoryStruct{
     size_t size;
 };
 
-double lat = 0.0;
-double lon = 0.0;
+
 
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
 
 int getCoordinates(int postal, char *streetName, double *lat, double *lon){
-
     CURL *handle;
     struct MemoryStruct chunk;
 

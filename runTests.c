@@ -36,8 +36,6 @@ void testGetCoords(CuTest *tc){
     CuAssertDblEquals(tc, expectedLon, actualLon, 0.1);
 }
 
-
-
 CuSuite *test_calc_GetSuite() {
     CuSuite *suite = CuSuiteNew();
     SUITE_ADD_TEST(suite, testCalcDistance);
@@ -48,8 +46,6 @@ CuSuite *test_calc_GetSuite() {
 
     return suite;
 }
-
-
 
 void RunAllTests(void) {
     CuString *output = CuStringNew();

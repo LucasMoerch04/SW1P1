@@ -33,10 +33,10 @@ void getInputHome(int *postal, char *streetName){
 
 //postal
     
-    printf("To apply for hoursing we must know your %scurrent address%s.\n", UGRN, COLOR_RESET);
+    printf("We need info about the applier's %scurrent address%s.\n", UGRN, COLOR_RESET);
 
     while (!valid){ 
-        printf("Enter %spostal code%s for current address: ", UGRN, COLOR_RESET);
+        printf("Enter the %spostal code%s for the applier's address: ", UGRN, COLOR_RESET);
 
         if (fgets(postalH, sizeof(postalH), stdin)){
             postalH[strcspn(postalH, "\n")] = '\0'; //erstatte \n med \0
@@ -56,7 +56,7 @@ void getInputHome(int *postal, char *streetName){
 //streetname
 
     while (bool){
-        printf("Enter %sroad name%s for current address: ", UGRN, COLOR_RESET);
+        printf("Enter %sroad name%s for the applier's address: ", UGRN, COLOR_RESET);
         if (fgets(streetNameH, sizeof(streetNameH), stdin)){
                 streetNameH[strcspn(streetNameH, "\n")] = '\0';
 
@@ -81,10 +81,10 @@ void getInputOccupation(int *postal, char *streetName){
 
 //postal
     
-    printf("To apply for hoursing we must know your %soccupation's address%s.\n", UBLU, COLOR_RESET);
+    printf("\nWe need info about the applier's %soccupation's address%s.\n", UBLU, COLOR_RESET);
 
     while (!valid){ 
-        printf("Enter %spostal code%s for occupation's address: ", UBLU, COLOR_RESET);
+        printf("Enter %spostal code%s for the applier's occupation's address: ", UBLU, COLOR_RESET);
 
         if (fgets(postalO, sizeof(postalO), stdin)){
             postalO[strcspn(postalO, "\n")] = '\0'; //erstatte \n med \0
@@ -104,7 +104,7 @@ void getInputOccupation(int *postal, char *streetName){
 //streetname
 
     while (bool){
-        printf("Enter %sroad name%s for occupation's address: ", UBLU, COLOR_RESET);
+        printf("Enter %sroad name%s for the applier's occupation's address: ", UBLU, COLOR_RESET);
         if (fgets(streetNameO, sizeof(streetNameO), stdin)){
                 streetNameO[strcspn(streetNameO, "\n")] = '\0';
 
@@ -129,10 +129,10 @@ void getInputHousing(int *postal, char *streetName){
 
 //postal
     
-    printf("To apply for hoursing we must know the address for the %sdesired housing%s.\n", UMAG, COLOR_RESET);
+    printf("\nWe need info about the address for the %savailable housing%s.\n", UMAG, COLOR_RESET);
 
     while (!valid){ 
-        printf("Enter %spostal code%s for the address for the desired housing: ", UMAG, COLOR_RESET);
+        printf("Enter %spostal code%s for the desired housing: ", UMAG, COLOR_RESET);
 
         if (fgets(postalH, sizeof(postalH), stdin)){
             postalH[strcspn(postalH, "\n")] = '\0'; //erstatte \n med \0
@@ -152,7 +152,7 @@ void getInputHousing(int *postal, char *streetName){
 //streetname
 
     while (bool){
-        printf("Enter %sroad name%s for the address for the desired housing: ", UMAG, COLOR_RESET);
+        printf("Enter %sroad name%s for the desired housing: ", UMAG, COLOR_RESET);
         if (fgets(streetNameH, sizeof(streetNameH), stdin)){
                 streetNameH[strcspn(streetNameH, "\n")] = '\0';
 
@@ -196,4 +196,5 @@ int isValidStreetName(const char *name){
         }
     }
     return containsLetter; // Gyldigt hvis mindst ét bogstav er fundet
+
 }

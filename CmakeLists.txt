@@ -4,12 +4,29 @@ project(MyProject VERSION 1.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
+# Find required packages
 find_package(CURL REQUIRED)
 find_package(cJSON REQUIRED)
+
+# Copy the applicants.txt file
 configure_file(applicants.txt applicants.txt COPYONLY)
 
+# Add the CuTest library
+add_library(cutest STATIC CuTest.c)
 
-add_executable(MyProject main.c retrieveAPI.h retrieveAPI.c applicantStruct.h applicantStruct.c co2.h co2.c distance.h distance.c getInputs.c getInputs.h)
+# Ensure CuTest's header file is visible to targets
+target_include_directories(cutest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(MyProject cjson CURL::libcurl)
+# Add the main executable
+add_executable(MyProject 
+    main.c 
+    retrieveAPI.h retrieveAPI.c 
+    applicantStruct.h applicantStruct.c 
+    co2.h co2.c 
+    distance.h distance.c 
+    getInputs.c getInputs.h 
+    runTests.c runTests.h
+)
 
+# Link libraries to the executable
+target_link_libraries(MyProject PRIVATE cutest cjson CURL::libcurl)

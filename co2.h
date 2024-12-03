@@ -6,6 +6,6 @@
 */
 
 double calculateCo2(double distance);
-double CalculateEmissions(double distance, char transportType[]);
+double calculateEmissions(double distance, char transportType[]);
 
 #endif

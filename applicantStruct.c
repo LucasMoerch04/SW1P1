@@ -55,7 +55,7 @@ void readApplicantsList(Applicant *applicants, int *numApplicants){
             // add applicant to array
             applicants[*numApplicants] = (Applicant){id, postalTemp,xCoordHomeTemp, yCoordHomeTemp, xCoordOccTemp, yCoordOccTemp, 
                                                      daysOnListTemp, 0, 0, 0.0, 0.0, 0.0 };
-            // 
+        
             (*numApplicants)++;
             if (*numApplicants >= MAX_APPLICANTS){
                 printf("Maximum number of applicants reached!\n");
@@ -63,7 +63,6 @@ void readApplicantsList(Applicant *applicants, int *numApplicants){
             }
         }
         fclose(file);
-        printf("%d", *numApplicants);
     } else{
         printf("File not found. Starting IDs from 1.\n");
     }

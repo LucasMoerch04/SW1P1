@@ -15,14 +15,14 @@ double co2emission;
 #define bikeCo2 0
 
 double calculateCo2(double distance){
-    // 0.120 grams of CO2 per kilometer
+    // 0.166 grams of CO2 per kilometer in car
     double co2PerKmInKg = co2PerKilometer / 1000;
     double co2Discharge = co2PerKmInKg * distance;
 
     return co2Discharge;
 }
 
-double CalculateEmissions(double distance, char transportType[]){
+double calculateEmissions(double distance, char transportType[]){
     if (strcmp(transportType, "Car") == 0){
         co2PerKilometer = carCo2;
         co2emission = calculateCo2(distance);

@@ -5,6 +5,8 @@
 #include "distance.h"
 #include "co2.h"
 #include "getInputs.h"
+#include "CuTest.h"
+#include "runTests.h"
 
 void addNewApplicant(int numApplicants);
 void waitListByCO2(Applicant *applicants, int numApplicants);
@@ -15,10 +17,9 @@ int compareBySeniority(const void *a, const void *b);
 void outputList(Applicant *applicantList, int numApplicants, int status);
 
 
-int occupationPostal = 0;
-
-
 int main(void){
+
+    RunAllTests();
 
     double avaHousingLat, avaHousingLon; 
     double applicantLat, applicantLon;
@@ -36,7 +37,7 @@ int main(void){
     
     if (answer == '1'){
         addNewApplicant(numApplicants);
-
+        
     } else if(answer == '2'){
         waitListByCO2(applicantList, numApplicants);
         qsort(applicantList, numApplicants, sizeof(Applicant), compareByCO2);
@@ -45,7 +46,6 @@ int main(void){
     } else if(answer == '3'){
         qsort(applicantList, numApplicants, sizeof(Applicant), compareBySeniority);
         outputList(applicantList, numApplicants, 0);
-        
     }
 
     return 0;
@@ -70,7 +70,6 @@ void addNewApplicant(int numApplicants){
     // Applicant work-site coordinates
     getCoords(occPostal, occStreet, &workLat, &workLon);
     
-    
     newApplicant(numApplicants, homePostal, applicantLat, applicantLon, workLat, workLon, 0);
 }
 
@@ -82,7 +81,7 @@ void waitListByCO2(Applicant *applicantList, int numApplicants){
     // Get input for available housing
     getInputHousing(&avaPostal, avaStreet);
     getCoords(avaPostal, avaStreet, &avaHousingLat, &avaHousingLon);
-    occupationPostal = 9400;
+
 
     for (int i = 0; i < numApplicants; i++){
         double distanceCurrent = calcDistKm(applicantList[i].xCoordHome, applicantList[i].yCoordHome, applicantList[i].xCoordOcc, applicantList[i].yCoordOcc);
@@ -90,10 +89,10 @@ void waitListByCO2(Applicant *applicantList, int numApplicants){
         double distanceNew = calcDistKm(avaHousingLat, avaHousingLon, applicantList[i].xCoordOcc, applicantList[i].yCoordOcc);
 
         // Calculate CO2 emissions
-        double CO2Current = CalculateEmissions(distanceCurrent, "Car");
+        double CO2Current = calculateEmissions(distanceCurrent, "Car");
 
         // Calculate new CO2 emissions
-        double CO2New = CalculateEmissions(distanceNew, "Car");
+        double CO2New = calculateEmissions(distanceNew, "Car");
 
         double CO2Savings = CO2Current - CO2New;
 
@@ -125,11 +124,11 @@ int compareByCO2(const void *a, const void *b){
 
     // The applicant with most CO2 Saving is prioritized
     if (applicantA->CO2Savings > applicantB->CO2Savings){
-        return 1;
+        return -1;
     }
 
     if (applicantA->CO2Savings < applicantB->CO2Savings){
-        return -1;  
+        return 1;  
     }
 
     return 0;
@@ -153,9 +152,6 @@ void outputList(Applicant *applicantList, int numApplicants, int status){
             printf("\nID: %d Postal: %d Days On List: %d\n", applicantList[i].id, applicantList[i].postal, applicantList[i].daysOnList);           
         }   
     }
-    
-
-    
 }
 
 

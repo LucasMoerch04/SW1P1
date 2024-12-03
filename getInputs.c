@@ -196,12 +196,4 @@ int isValidStreetName(const char *name){
         }
     }
     return containsLetter; // Gyldigt hvis mindst ét bogstav er fundet
-
-    /*return containsLetter; // Gyldigt hvis mindst ét bogstav er fundet
-    for (int i = 0; name[i] != '\0'; i++) {
-        if (!isalpha(name[i]) && name[i] != '.' && name[i] != ' ') {
-            return 0; // Indeholder ugyldige tegn
-        } 
-    }
-    return 1; //hvis der ikke er nogle tal og strengen ikke er tom*/
 }

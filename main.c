@@ -10,12 +10,13 @@
 
 void addNewApplicant(int numApplicants, int largestId);
 void waitListByCO2(Applicant *applicantList, int numApplicants);
-void getCoords(int postal, char *streetName, double *lat, double *lon);
 int compareByCO2(const void *a, const void *b);
 int compareBySeniority(const void *a, const void *b);
 void sortBySolution(Applicant *applicantList, int numApplicants, int turn, int index);
-void outputList(Applicant *applicantList, int numApplicants, int status);
 int isEven(int number);
+void outputList(Applicant *applicantList, int numApplicants, int status);
+void outputNext(Applicant *applicantList, int turn, int index);
+
 
 
 int main(int argc, char *argv[]){
@@ -34,11 +35,11 @@ int main(int argc, char *argv[]){
     char answer;
     Applicant *applicantList = makeApplicantsArray(&numApplicants, &largestId);
 
-    printf("Tast 1 for at tilføje en ansøger\n");
-    printf("Tast 2 for at printe ventelisten, baseret på CO2 besparelse\n");
-    printf("Tast 3 for at printe ventelisten, baseret på ventetid\n");
-    printf("Tast 4 for at printe ventelisten, baseret på VORES LØSNING IDK\n");
-    printf("Tast q for at slutte programmet\n");
+    printf("Press %s1%s to add an applicant.\n", UBLU, COLOR_RESET);
+    printf("Press %s2%s to print the waiting list, based on CO2 reduction.\n", UBLU, COLOR_RESET);
+    printf("Press %s3%s to print the waiting list, based on waiting time.\n", UBLU, COLOR_RESET);
+    printf("Press %s4%s to print the waiting lsit, based on our solution.\n", UBLU, COLOR_RESET);
+    printf("Press %sq%s to %sexit%s the program.\n", UBLU, COLOR_RESET, URED, COLOR_RESET);
 
     scanf(" %c", &answer);
     
@@ -51,6 +52,7 @@ int main(int argc, char *argv[]){
         outputList(applicantList, numApplicants, 1);
 
     } else if(answer == '3'){
+        
         qsort(applicantList, numApplicants, sizeof(Applicant), compareBySeniority);
         outputList(applicantList, numApplicants, 0);
 
@@ -62,7 +64,7 @@ int main(int argc, char *argv[]){
 
         do {
             sortBySolution(applicantList, numApplicants, turn, index);
-            printf("Want next applicant? (y/n) ");
+            printf("Want next applicant? (y/n):   ");
             scanf(" %c", &next);
             turn++;
             if (!isEven(turn)){ // Only increment index every other turn
@@ -77,33 +79,39 @@ int main(int argc, char *argv[]){
 void addNewApplicant(int numApplicants, int largestId){
     double applicantLat, applicantLon;
     double workLat, workLon;
-
+    int result = 0;
     int homePostal;
     char homeStreet[NAME_LENGTH];
     int occPostal;
     char occStreet[NAME_LENGTH]; 
 
-    // Get inputs
-    getInputHome(&homePostal, homeStreet);
-    getInputOccupation(&occPostal, occStreet); 
-
     // Applicant home coordinates
-    getCoords(homePostal, homeStreet, &applicantLat, &applicantLon);
-    
+    while(result != 1){
+        getInputHome(&homePostal, homeStreet);
+        result = getCoordinates(homePostal, homeStreet, &applicantLat, &applicantLon);
+    }
+    result = 0;
+
     // Applicant work-site coordinates
-    getCoords(occPostal, occStreet, &workLat, &workLon);
+    while(result != 1){
+        getInputOccupation(&occPostal, occStreet); 
+        result = getCoordinates(occPostal, occStreet, &workLat, &workLon); 
+    }
     
     newApplicant(largestId, numApplicants, homePostal, applicantLat, applicantLon, workLat, workLon, 0);
 }
 
+
 void waitListByCO2(Applicant *applicantList, int numApplicants){
     double avaHousingLat, avaHousingLon; 
-
+    int result = 0;
     int avaPostal;
     char avaStreet[NAME_LENGTH];
     // Get input for available housing
-    getInputHousing(&avaPostal, avaStreet);
-    getCoords(avaPostal, avaStreet, &avaHousingLat, &avaHousingLon);
+    while (result != 1){
+        getInputHousing(&avaPostal, avaStreet);
+        result = getCoordinates(avaPostal, avaStreet, &avaHousingLat, &avaHousingLon);
+    }
 
 
     for (int i = 0; i < numApplicants; i++){
@@ -122,12 +130,6 @@ void waitListByCO2(Applicant *applicantList, int numApplicants){
         // update applicant to array
         applicantList[i] = (Applicant){applicantList[i].id, applicantList[i].postal, applicantList[i].xCoordHome, applicantList[i].yCoordHome, applicantList[i].xCoordOcc, applicantList[i].yCoordOcc,
                                                             applicantList[i].daysOnList, distanceCurrent, distanceNew, CO2Current, CO2New, CO2Savings};
-    }
-}
-
-void getCoords(int postal, char *streetName, double *lat, double *lon){
-    if (getCoordinates(postal, streetName, lat, lon) != 1) {
-        printf("Error retrieving coordinates\n");
     }
 }
 
@@ -168,31 +170,56 @@ int compareBySeniority(const void *a, const void *b){
 void sortBySolution(Applicant *applicantList, int numApplicants, int turn, int index){
     if (isEven(turn)){
         qsort(applicantList, numApplicants, sizeof(Applicant), compareBySeniority);
-        printf("Next applicant in line is: (Based on days on waitlist)\n");
-        printf("\n%d | ID: %d Postal: %d Days On List: %d\n", turn, applicantList[index].id, applicantList[index].postal, applicantList[index].daysOnList);
-        
+        outputNext(applicantList, turn, index);
     } else {
         qsort(applicantList, numApplicants, sizeof(Applicant), compareByCO2);
-        printf("Next applicant in line is: (Based on CO2 savings)\n");
-        printf("\n%d | ID: %d Postal: %d Days On List: %d DistanceCURRENT: %.2lf DistanceNEW: %.2lf CO2 SAVED: %lf\n", turn, applicantList[index].id, applicantList[index].postal, applicantList[index].daysOnList, applicantList[index].distanceCurrent, applicantList[index].distanceNew, applicantList[index].CO2Savings);           
-    }
+        outputNext(applicantList, turn, index);
+     }
 }
 
 int isEven(int number){
     return number % 2 == 0;
 }
 
-
 // Status indicates information given in outputs (1 for information about distance and CO2)
 void outputList(Applicant *applicantList, int numApplicants, int status){
     if (status == 1){
+        printf("\nWaitlist based on CO2 reduction\n"); 
+        printf("----------------------------------------------------------------\n");
+        printf("| %-3s %-6s %-6s %-12s %-14s %-10s %-3s |\n", "Nr", "Postal", "Days", "Distance", "New Distance", "CO2", "ID");
+        printf("| %-3s %-6s %-6s (km)%-8s (km)%-10s (kg)%-8s %-1s |\n", " ", " ", " ", " ", " ", " ", " ");
+        
+        printf("----------------------------------------------------------------\n");
         for (int i = 0; i < numApplicants; i++){
-            printf("\n%d | ID: %d Postal: %d Days On List: %d DistanceCURRENT: %.2lf DistanceNEW: %.2lf CO2 SAVED: %lf\n", i, applicantList[i].id, applicantList[i].postal, applicantList[i].daysOnList, applicantList[i].distanceCurrent, applicantList[i].distanceNew, applicantList[i].CO2Savings);           
-        }   
+            printf("| %-3d %-6d %-6d %-12.2lf %-14.2lf %-10.2lf %-3d |\n", i + 1, applicantList[i].postal, applicantList[i].daysOnList, applicantList[i].distanceCurrent, applicantList[i].distanceNew, applicantList[i].CO2Savings, applicantList[i].id);           
+        }
+        printf("----------------------------------------------------------------\n");
     }
     else {
+        printf("\nWaitlist based on days on list\n"); 
+        printf("--------------------------\n");
+        printf("| %-3s %-8s %-5s %-3s |\n", "Nr", "Postal", "Days", "ID");        
+        printf("--------------------------\n");
         for (int i = 0; i < numApplicants; i++){
-            printf("\n%d | ID: %d Postal: %d Days On List: %d\n", i, applicantList[i].id, applicantList[i].postal, applicantList[i].daysOnList);           
-        }   
+            printf("| %-3d %-8d %-5d %-3d |\n", i + 1, applicantList[i].postal, applicantList[i].daysOnList,  applicantList[i].id);           
+        }
+        printf("--------------------------\n");
+    }
+}
+
+void outputNext(Applicant *applicantList, int turn, int index){
+    if (isEven(turn)){
+        printf("\nNext applicant in line is: (Based on days on waitlist)\n");
+        printf("--------------------------\n");
+        printf("| %-3s %-8s %-5s %-3s |\n", "Nr", "Postal", "Days", "ID");        
+        printf("| %-3d %-8d %-5d %-3d |\n", turn, applicantList[index].postal, applicantList[index].daysOnList,  applicantList[index].id);           
+        printf("--------------------------\n");
+    } else {
+        printf("\nNext applicant in line is: (Based on CO2 savings)\n");
+        printf("----------------------------------------------------------------\n");
+        printf("| %-3s %-6s %-6s %-12s %-14s %-10s %-3s |\n", "Nr", "Postal", "Days", "Distance", "New Distance", "CO2", "ID");
+        printf("| %-3s %-6s %-6s (km)%-8s (km)%-10s (kg)%-8s %-1s |\n", " ", " ", " ", " ", " ", " ", " "); 
+        printf("| %-3d %-6d %-6d %-12.2lf %-14.2lf %-10.2lf %-3d |\n", turn, applicantList[index].postal, applicantList[index].daysOnList, applicantList[index].distanceCurrent, applicantList[index].distanceNew, applicantList[index].CO2Savings, applicantList[index].id);           
+        printf("----------------------------------------------------------------\n");
     }
 }

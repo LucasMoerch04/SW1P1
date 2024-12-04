@@ -72,4 +72,27 @@ Step 3 Run the project and smile:
 ./MyProject
 ```
 
+# Locale Setup in WSL
+
+## Test if Locale is Set Correctly
+
+1. Open your WSL terminal.
+2. Run the following command to check your current locale:
+   ```bash
+   locale
+   ```
+   Should show this line:
+   ```
+   LANG=da_DK.UTF-8
+   ```
+*If the locale is not set to da_DK.UTF-8, follow these steps:
+
+Install the necessary locale package:
+```
+sudo apt update
+sudo apt install language-pack-da
+sudo update-locale LANG=da_DK.UTF-8
+```
+3. Restart terminal and test Locale again
+
 

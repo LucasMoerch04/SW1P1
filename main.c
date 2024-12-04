@@ -20,8 +20,10 @@ int isEven(int number);
 
 int main(int argc, char *argv[]){
     // Run program with '-test'
-    if (strcmp(argv[1], "-test") == 0){
-        RunAllTests();
+    if (argc == 2){
+        if (strcmp(argv[1], "-test") == 0){
+            RunAllTests();
+        }
     }
 
     double avaHousingLat, avaHousingLon; 

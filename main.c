@@ -13,14 +13,16 @@ void waitListByCO2(Applicant *applicantList, int numApplicants);
 void getCoords(int postal, char *streetName, double *lat, double *lon);
 int compareByCO2(const void *a, const void *b);
 int compareBySeniority(const void *a, const void *b);
-void outputList(Applicant *applicantList, int numApplicants, int status);
 void sortBySolution(Applicant *applicantList, int numApplicants, int turn, int index);
+void outputList(Applicant *applicantList, int numApplicants, int status);
 int isEven(int number);
 
 
-int main(void){
-
-    RunAllTests();
+int main(int argc, char *argv[]){
+    // Run program with '-test'
+    if (strcmp(argv[1], "-test") == 0){
+        RunAllTests();
+    }
 
     double avaHousingLat, avaHousingLon; 
     double applicantLat, applicantLon;

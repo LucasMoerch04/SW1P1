@@ -24,9 +24,9 @@ int getCoordinates(int postal, char *streetName, double *lat, double *lon){
     chunk.memory = malloc(1);  // Initial allocation
     chunk.size = 0;
 
-    char *url = NULL;
+    char url[100];
 
-    asprintf(&url, "https://api.dataforsyningen.dk/adresser?postnr=%d&vejnavn=%s&format=geojson", postal, streetName);
+    sprintf(url, "https://api.dataforsyningen.dk/adresser?postnr=%d&vejnavn=%s&format=geojson", postal, streetName);
     
     handle = curl_easy_init();
 

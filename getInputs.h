@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <locale.h>
+
 
 // Constants
 #define NAME_LENGTH 1000

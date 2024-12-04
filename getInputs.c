@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <locale.h>
+#include <wchar.h>
+#include <wctype.h>
 
 #define NAME_LENGTH 1000
 #define POST_LENGTH 10
@@ -25,6 +28,7 @@ int isValidStreetName(const char *name);
 
 
 void getInputHome(int *postal, char *streetName){
+
     char streetNameH[NAME_LENGTH];
     char postalH[POST_LENGTH];
 
@@ -181,20 +185,24 @@ int isValidPostal(const char *postal){
     return 1;
 }
 
-int isValidStreetName(const char *name){
+
+int isValidStreetName(const char *name) {
     int containsLetter = 0;
 
     if (name == NULL || strlen(name) == 0) {
-        return 0; // Tomt input
+        return 0; // Empty input
     }
 
-    for (int i = 0; name[i] != '\0'; i++) {
-        if (isalpha(name[i])) {
-            containsLetter = 1; // Fundet et bogstav
-        } else if (name[i] != '.' && name[i] != ' ') {
-            return 0; // Indeholder ugyldige tegn
+    // Convert to wide-character string
+    wchar_t wname[NAME_LENGTH];
+    mbstowcs(wname, name, NAME_LENGTH);
+
+    for (int i = 0; wname[i] != L'\0'; i++) {
+        if (iswalpha(wname[i])) {
+            containsLetter = 1; // Found a letter
+        } else if (wname[i] != L'.' && wname[i] != L' ') {
+            return 0; // Contains invalid characters
         }
     }
-    return containsLetter; // Gyldigt hvis mindst ét bogstav er fundet
-
+    return containsLetter; // Valid if at least one letter is found
 }

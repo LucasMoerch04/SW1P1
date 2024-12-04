@@ -26,7 +26,13 @@ int getCoordinates(int postal, char *streetName, double *lat, double *lon){
 
     char url[100];
 
-    sprintf(url, "https://api.dataforsyningen.dk/adresser?postnr=%d&vejnavn=%s&format=geojson", postal, streetName);
+    char *encodedStreetName = curl_easy_escape(handle, streetName, 0);
+    if (encodedStreetName) {
+        sprintf(url, "https://api.dataforsyningen.dk/adresser?postnr=%d&vejnavn=%s&format=geojson", postal, encodedStreetName);
+        // Don't forget to free the encoded string when done
+        curl_free(encodedStreetName);
+    }
+
     
     handle = curl_easy_init();
 

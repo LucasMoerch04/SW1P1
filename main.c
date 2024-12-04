@@ -7,6 +7,8 @@
 #include "getInputs.h"
 #include "CuTest.h"
 #include "runTests.h"
+#include <locale.h>
+
 
 void addNewApplicant(int numApplicants, int largestId);
 void waitListByCO2(Applicant *applicantList, int numApplicants);
@@ -20,6 +22,8 @@ void outputNext(Applicant *applicantList, int turn, int index);
 
 
 int main(int argc, char *argv[]){
+    
+
     // Run program with '-test'
     if (argc == 2){
         if (strcmp(argv[1], "-test") == 0){
@@ -34,6 +38,10 @@ int main(int argc, char *argv[]){
     int largestId = 0;
     char answer;
     Applicant *applicantList = makeApplicantsArray(&numApplicants, &largestId);
+
+    if (setlocale(LC_ALL, "da_DK.UTF-8") == NULL) {
+        printf("Locale setting failed!\n");
+    }
 
     printf("Press %s1%s to add an applicant.\n", UBLU, COLOR_RESET);
     printf("Press %s2%s to print the waiting list, based on CO2 reduction.\n", UBLU, COLOR_RESET);

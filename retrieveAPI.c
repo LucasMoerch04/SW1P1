@@ -24,9 +24,9 @@ int getCoordinates(int postal, char *streetName, double *lat, double *lon){
     chunk.memory = malloc(1);  // Initial allocation
     chunk.size = 0;
 
-    char *url = NULL;
+    char url[100];
 
-    asprintf(&url, "https://api.dataforsyningen.dk/adresser?postnr=%d&vejnavn=%s&format=geojson", postal, streetName);
+    sprintf(url, "https://api.dataforsyningen.dk/adresser?postnr=%d&vejnavn=%s&format=geojson", postal, streetName);
     
     handle = curl_easy_init();
 
@@ -45,18 +45,22 @@ int getCoordinates(int postal, char *streetName, double *lat, double *lon){
             // Parse the JSON response
             cJSON *json = cJSON_Parse(chunk.memory);
             cJSON *features = cJSON_GetObjectItemCaseSensitive(json, "features");
-            cJSON *firstFeature = cJSON_GetArrayItem(features, 0);
-            cJSON *geometry = cJSON_GetObjectItemCaseSensitive(firstFeature, "geometry");
-            cJSON *coordinates = cJSON_GetObjectItemCaseSensitive(geometry, "coordinates");
+            if (cJSON_IsArray(features) && cJSON_GetArraySize(features) > 0) {
+                cJSON *firstFeature = cJSON_GetArrayItem(features, 0);
+                cJSON *geometry = cJSON_GetObjectItemCaseSensitive(firstFeature, "geometry");
+                cJSON *coordinates = cJSON_GetObjectItemCaseSensitive(geometry, "coordinates");
 
-            // Retrieve longitude and latitude
-            cJSON *longitude = cJSON_GetArrayItem(coordinates, 0);
-            cJSON *latitude = cJSON_GetArrayItem(coordinates, 1);
+                // Retrieve longitude and latitude
+                cJSON *longitude = cJSON_GetArrayItem(coordinates, 0);
+                cJSON *latitude = cJSON_GetArrayItem(coordinates, 1);
 
-            // Set global lat and lon
-            *lat = latitude->valuedouble;
-            *lon = longitude->valuedouble;
-
+                // Set global lat and lon
+                *lat = latitude->valuedouble;
+                *lon = longitude->valuedouble;
+            } else {
+                printf("Address not found. Try again\n\n");
+                return 0;
+            }
             // Cleanup
             cJSON_Delete(json);
         }

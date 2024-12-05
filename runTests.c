@@ -13,7 +13,7 @@ void testCalcDistance(CuTest *tc){
 
 void testCalcDistanceERROR(CuTest *tc){
     double actual = calcDistKm(524325.626087489, -14322.591567764206339, 55.664031625, 12.60097718762547);
-    double expected = 13.37;
+    double expected = -1;
     CuAssertDblEquals(tc, expected, actual, 0.1);
 }
 

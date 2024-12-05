@@ -9,7 +9,6 @@
 #include "runTests.h"
 #include <locale.h>
 
-
 void addNewApplicant(int numApplicants, int largestId);
 void waitListByCO2(Applicant *applicantList, int numApplicants);
 int compareByCO2(const void *a, const void *b);
@@ -18,7 +17,6 @@ void sortBySolution(Applicant *applicantList, int numApplicants, int turn, int i
 int isEven(int number);
 void outputList(Applicant *applicantList, int numApplicants, int status);
 void outputNext(Applicant *applicantList, int turn, int index);
-
 
 
 int main(int argc, char *argv[]){
@@ -80,7 +78,7 @@ int main(int argc, char *argv[]){
             }
         } while (next == 'y');
     }
-
+    free(applicantList);
     return 0;
 }
 

@@ -6,12 +6,6 @@
 #include <curl/curl.h>
 #include <cjson/cJSON.h>
 
-// Structure to hold the response data
-struct MemoryStruct{
-    char *memory;
-    size_t size;
-};
-
 
 // Function prototypes
 int getCoordinates(int postal, char *streetName, double *lat, double *lon);

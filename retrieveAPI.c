@@ -12,8 +12,6 @@ struct MemoryStruct{
     size_t size;
 };
 
-
-
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
 
@@ -65,6 +63,8 @@ int getCoordinates(int postal, char *streetName, double *lat, double *lon){
                 *lon = longitude->valuedouble;
             } else {
                 printf("Address not found. Try again\n\n");
+                free(chunk.memory);  // Free the memory allocated for the response
+
                 return 0;
             }
             // Cleanup
@@ -76,6 +76,7 @@ int getCoordinates(int postal, char *streetName, double *lat, double *lon){
 
         return 1;
     }
+    free(chunk.memory);  // Free the memory allocated for the response
     return 0;
 }
 

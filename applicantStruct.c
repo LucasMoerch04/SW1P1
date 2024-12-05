@@ -1,27 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "applicantStruct.h"
 
 #define MAX_APPLICANTS 100
 
-typedef struct Applicant{
-    int id;
-    int postal;
-    double xCoordHome;
-    double yCoordHome;
-    double xCoordOcc;
-    double yCoordOcc;
-    int daysOnList;
-    double distanceCurrent;
-    double distanceNew;
-    double CO2Current;
-    double CO2New;
-    double CO2Savings;
-   
-} Applicant;
-
 void readApplicantsList(Applicant *applicants, int *numApplicants, int *largestId);
 void newApplicant(int largestId, int numApplicants, int postal, double xCoordHome, double yCoordHome, double xCoordOcc, double yCoordOcc, int daysOnList);
-
 
 
 Applicant *makeApplicantsArray(int *numApplicants, int *largestId){
@@ -44,16 +28,34 @@ void readApplicantsList(Applicant *applicants, int *numApplicants, int *largestI
 
     if (file){
         int id, postalTemp, daysOnListTemp, distanceCurrentTemp, distanceNewTemp;
+        int result;
         double xCoordHomeTemp, yCoordHomeTemp, xCoordOccTemp, yCoordOccTemp, CO2CurrentTemp, CO2NewTemp;
 
-        while (fscanf(file, "%d %d %lf %lf %lf %lf %d", &id, &postalTemp, &xCoordHomeTemp, &yCoordHomeTemp, &xCoordOccTemp, &yCoordOccTemp,
-                      &daysOnListTemp) == 7){
+        while (1){
+            result = fscanf(file, "%d %d %lf %lf %lf %lf %d", &id, &postalTemp, &xCoordHomeTemp, &yCoordHomeTemp, &xCoordOccTemp, &yCoordOccTemp,
+                                                                &daysOnListTemp);
+            if (result != 7){ // If file is finished or error in fscanf
+                break;
+            }
             if (id > *largestId){
                 *largestId = id;
             }
             // add applicant to array
-            applicants[*numApplicants] = (Applicant){id, postalTemp,xCoordHomeTemp, yCoordHomeTemp, xCoordOccTemp, yCoordOccTemp, 
-                                                     daysOnListTemp, 0, 0, 0.0, 0.0, 0.0 };
+            Applicant app;
+            app.id = id;
+            app.postal = postalTemp;
+            app.xCoordHome = xCoordHomeTemp;
+            app.yCoordHome = yCoordHomeTemp;
+            app.xCoordOcc = xCoordOccTemp;
+            app.yCoordOcc = yCoordOccTemp;
+            app.daysOnList = daysOnListTemp;
+            app.distanceNew = 0;
+            app.distanceCurrent = 0;
+            app.CO2Current = 0;
+            app.CO2New = 0;
+            app.CO2Savings = 0;
+
+            applicants[*numApplicants] = app;
         
             (*numApplicants)++;
             if (*numApplicants >= MAX_APPLICANTS){

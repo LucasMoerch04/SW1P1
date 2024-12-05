@@ -17,7 +17,7 @@ double calcDistKm(double lat1, double lon1, double lat2, double lon2){
     if(lat1 >= 90 || lat1 <= -90 || lat2 >= 90 || lat2 <= -90 ||
       lon1 >= 180 || lon1 <= -180 || lon2 >= 180 || lon2 <= -180){
         printf("Invalid input\n");
-        return 13.37;
+        return -1;
     }
 
     double deltaLat = convDegToRad(lat2 - lat1);

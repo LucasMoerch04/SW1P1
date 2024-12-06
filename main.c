@@ -93,14 +93,14 @@ void addNewApplicant(int numApplicants, int largestId){
 
     // Applicant home coordinates
     while(result != 1){
-        getInputHome(&homePostal, homeStreet);
+        getInput(&homePostal, homeStreet, 1);
         result = getCoordinates(homePostal, homeStreet, &applicantLat, &applicantLon);
     }
     result = 0;
 
     // Applicant work-site coordinates
     while(result != 1){
-        getInputOccupation(&occPostal, occStreet); 
+        getInput(&occPostal, occStreet, 2); 
         result = getCoordinates(occPostal, occStreet, &workLat, &workLon); 
     }
     
@@ -115,7 +115,7 @@ void waitListByCO2(Applicant *applicantList, int numApplicants){
     char avaStreet[NAME_LENGTH];
     // Get input for available housing
     while (result != 1){
-        getInputHousing(&avaPostal, avaStreet);
+        getInput(&avaPostal, avaStreet, 3);
         result = getCoordinates(avaPostal, avaStreet, &avaHousingLat, &avaHousingLon);
     }
 

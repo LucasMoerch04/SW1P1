@@ -6,6 +6,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <locale.h>
+#include <wchar.h>
+#include <wctype.h>
 
 
 // Constants
@@ -24,10 +26,7 @@
 #define COLOR_RESET "\e[0m"
 
 // Function prototypes
-void getInputHome(int *postal, char *streetName);
-void getInputOccupation(int *postal, char *streetName);
-void getInputHousing(int *postal, char *streetName);
-int isValidPostal(const char *postal);
-int isValidStreetName(const char *name);
+void getInput(int *postal, char *streetName, int location);
+
 
 #endif

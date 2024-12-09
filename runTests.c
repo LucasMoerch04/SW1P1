@@ -36,12 +36,23 @@ void testGetCoords(CuTest *tc){
     CuAssertDblEquals(tc, expectedLon, actualLon, 0.1);
 }
 
+// Test GetCoordinates Fail
+void testGetCoordsERROR(CuTest *tc){
+    double lat, lon;
+    int res = getCoordinates(2650, "Falskvej", &lat, &lon);
+    int expectedRes = 0;
+
+    CuAssertDblEquals(tc, expectedRes, res, 0);
+}
+
+
 CuSuite *test_calc_GetSuite() {
     CuSuite *suite = CuSuiteNew();
     SUITE_ADD_TEST(suite, testCalcDistance);
     SUITE_ADD_TEST(suite, testCalcDistanceERROR);
     SUITE_ADD_TEST(suite, testCalcCO2);
     SUITE_ADD_TEST(suite, testGetCoords);
+    SUITE_ADD_TEST(suite, testGetCoordsERROR);
 
 
     return suite;

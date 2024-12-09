@@ -96,17 +96,22 @@ int getCoordinates(int postal, char *streetName, double *lat, double *lon) {
 }
 
 
-
 // Callback function for handling the response data
 size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
-    size_t totalSize = size * nmemb;
+    size_t totalSize = size * nmemb;    // Calculate the total size of the incoming data chunk
+
+    // Cast the user-defined pointer to the MemoryStruct type
     struct MemoryStruct *mem = (struct MemoryStruct *)userp;
 
+    // Reallocate memory for the new data chunk + 1 for null-terminator
     mem->memory = realloc(mem->memory, mem->size + totalSize + 1);
-    memcpy(&(mem->memory[mem->size]), contents, totalSize);
-    mem->size += totalSize;
-    mem->memory[mem->size] = 0;
 
-    return totalSize;
+    // Copy the new data chunk into the allocated memory buffer
+    memcpy(&(mem->memory[mem->size]), contents, totalSize);
+
+    mem->size += totalSize;    // Update size of the buffer
+    mem->memory[mem->size] = 0;    // Null-terminate the memory buffer
+
+    return totalSize;    // Return the size of the processed data to libcurl
 }
 

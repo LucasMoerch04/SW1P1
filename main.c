@@ -21,7 +21,6 @@ void outputNext(Applicant *applicantList, int turn, int index);
 
 int main(int argc, char *argv[]){
     
-
     // Run program with '-test'
     if (argc == 2){
         if (strcmp(argv[1], "-test") == 0){
@@ -48,7 +47,10 @@ int main(int argc, char *argv[]){
     printf("Press %sq%s to %sexit%s the program.\n", UBLU, COLOR_RESET, URED, COLOR_RESET);
 
     scanf(" %c", &answer);
-    
+
+    // Flush input buffer
+    while ((getchar()) != '\n');
+
     if (answer == '1'){
         addNewApplicant(numApplicants, largestId);
         
@@ -58,7 +60,6 @@ int main(int argc, char *argv[]){
         outputList(applicantList, numApplicants, 1);
 
     } else if(answer == '3'){
-        
         qsort(applicantList, numApplicants, sizeof(Applicant), compareBySeniority);
         outputList(applicantList, numApplicants, 0);
 

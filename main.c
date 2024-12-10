@@ -40,6 +40,7 @@ int main(int argc, char *argv[]){
         printf("Locale setting failed!\n");
     }
 
+
     printf("Press %s1%s to add an applicant.\n", UBLU, COLOR_RESET);
     printf("Press %s2%s to print the waiting list, based on CO2 reduction.\n", UBLU, COLOR_RESET);
     printf("Press %s3%s to print the waiting list, based on waiting time.\n", UBLU, COLOR_RESET);
@@ -71,7 +72,7 @@ int main(int argc, char *argv[]){
 
         do {
             sortBySolution(applicantList, numApplicants, turn, index);
-            printf("Want next applicant? (y/n):   ");
+            printf("Want next applicant? (%sy%s/%sn%s):   ", GRN, COLOR_RESET, RED, COLOR_RESET);
             scanf(" %c", &next);
             turn++;
             if (!isEven(turn)){ // Only increment index every other turn
@@ -193,7 +194,7 @@ void outputList(Applicant *applicantList, int numApplicants, int status){
     if (status == 1){
         printf("\nWaitlist based on CO2 reduction\n"); 
         printf("----------------------------------------------------------------\n");
-        printf("| %-3s %-6s %-6s %-12s %-14s %-10s %-3s |\n", "Nr", "Postal", "Days", "Distance", "New Distance", "CO2", "ID");
+        printf("| %-3s %-6s %s%-6s %s%-12s %s%-14s %s%-10s%s %s%-3s%s |\n", "Nr", "Postal", YEL, "Days", BLU, "Distance", CYN,"New Distance", GRN, "CO2", COLOR_RESET, COLOR_BOLD, "ID", COLOR_RESET);
         printf("| %-3s %-6s %-6s (km)%-8s (km)%-10s (kg)%-8s %-1s |\n", " ", " ", " ", " ", " ", " ", " ");
         
         printf("----------------------------------------------------------------\n");
@@ -205,7 +206,7 @@ void outputList(Applicant *applicantList, int numApplicants, int status){
     else {
         printf("\nWaitlist based on days on list\n"); 
         printf("--------------------------\n");
-        printf("| %-3s %-8s %-5s %-3s |\n", "Nr", "Postal", "Days", "ID");        
+        printf("| %-3s %-8s %s%-5s%s %s%-3s%s |\n", "Nr", "Postal", YEL, "Days", COLOR_RESET, COLOR_BOLD, "ID", COLOR_RESET);        
         printf("--------------------------\n");
         for (int i = 0; i < numApplicants; i++){
             printf("| %-3d %-8d %-5d %-3d |\n", i + 1, applicantList[i].postal, applicantList[i].daysOnList,  applicantList[i].id);           
@@ -218,13 +219,13 @@ void outputNext(Applicant *applicantList, int turn, int index){
     if (isEven(turn)){
         printf("\nNext applicant in line is: (Based on days on waitlist)\n");
         printf("--------------------------\n");
-        printf("| %-3s %-8s %-5s %-3s |\n", "Nr", "Postal", "Days", "ID");        
+        printf("| %-3s %-8s %s%-5s%s %s%-3s%s |\n", "Nr", "Postal", YEL, "Days", COLOR_RESET, COLOR_BOLD, "ID", COLOR_RESET);        
         printf("| %-3d %-8d %-5d %-3d |\n", turn, applicantList[index].postal, applicantList[index].daysOnList,  applicantList[index].id);           
         printf("--------------------------\n");
     } else {
         printf("\nNext applicant in line is: (Based on CO2 savings)\n");
         printf("----------------------------------------------------------------\n");
-        printf("| %-3s %-6s %-6s %-12s %-14s %-10s %-3s |\n", "Nr", "Postal", "Days", "Distance", "New Distance", "CO2", "ID");
+        printf("| %-3s %-6s %s%-6s %s%-12s %s%-14s %s%-10s%s %s%-3s%s |\n", "Nr", "Postal", YEL, "Days", BLU, "Distance", CYN,"New Distance", GRN, "CO2", COLOR_RESET, COLOR_BOLD, "ID", COLOR_RESET);
         printf("| %-3s %-6s %-6s (km)%-8s (km)%-10s (kg)%-8s %-1s |\n", " ", " ", " ", " ", " ", " ", " "); 
         printf("| %-3d %-6d %-6d %-12.2lf %-14.2lf %-10.2lf %-3d |\n", turn, applicantList[index].postal, applicantList[index].daysOnList, applicantList[index].distanceCurrent, applicantList[index].distanceNew, applicantList[index].CO2Savings, applicantList[index].id);           
         printf("----------------------------------------------------------------\n");

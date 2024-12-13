@@ -40,6 +40,7 @@ int getCoordinates(int postal, char *streetName, double *lat, double *lon) {
             // Free the encoded string to avoid memory leaks
             curl_free(encodedStreetName);
         }
+        printf("%s", url);
 
         // Set the URL for the API request
         curl_easy_setopt(handle, CURLOPT_URL, url);

@@ -24,7 +24,6 @@ typedef struct Applicant{
 
 // Function prototypes
 Applicant *makeApplicantsArray(int *numApplicants, int *largestId);
-void readApplicantsList(Applicant *applicants, int *numApplicants, int *largestId);
 void newApplicant(int largestId, int numApplicants, int postal, double xCoordHome, double yCoordHome, double xCoordOcc, double yCoordOcc, int daysOnList);
 
 

@@ -3,8 +3,6 @@
 #include <string.h>
 #include <math.h>
 
-#include "distance.h"
-
 #define PI 3.14159265359
 
 #define EARTH_RADIUS 6371

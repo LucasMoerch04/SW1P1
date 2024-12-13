@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "co2.h"
 
 // Grams of CO2 emission per km
 #define carCo2 166

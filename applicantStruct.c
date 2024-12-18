@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "applicantStruct.h"
+#include <locale.h>
+
 
 #define MAX_APPLICANTS 100
 
@@ -34,6 +36,7 @@ void readApplicantsList(Applicant *applicants, int *numApplicants, int *largestI
         while (1){
             result = fscanf(file, "%d %d %lf %lf %lf %lf %d", &id, &postalTemp, &xCoordHomeTemp, &yCoordHomeTemp, &xCoordOccTemp, &yCoordOccTemp,
                                                                 &daysOnListTemp);
+
             if (result != 7){ // If file is finished or error in fscanf
                 break;
             }
@@ -72,6 +75,7 @@ void readApplicantsList(Applicant *applicants, int *numApplicants, int *largestI
 void newApplicant(int largestId, int numApplicants, int postal, double xCoordHome, double yCoordHome, double xCoordOcc, double yCoordOcc, int daysOnList){
     FILE *file = fopen("../applicants.txt", "a");
     int id = largestId + 1;
+    setlocale(LC_NUMERIC, "C");  // Ensure dot is used as decimal separator
 
     if (file){
         fprintf(file, "\n%d %d %lf %lf %lf %lf %d", id, postal, xCoordHome, yCoordHome, xCoordOcc, yCoordOcc, daysOnList);

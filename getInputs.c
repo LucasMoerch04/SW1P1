@@ -60,7 +60,7 @@ void getInput(int *postal, char *streetName, int location){
     case 3:
         /* housing */
         color = UMAG;
-        printf("\nWe need info about the address for the %sdesired housing%s.\n", color, COLOR_RESET);
+        printf("\nWe need info about the address for the %available housing%s.\n", color, COLOR_RESET);
         break;
     default:
         break;

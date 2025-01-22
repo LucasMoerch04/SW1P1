@@ -54,7 +54,6 @@ CuSuite *test_calc_GetSuite() {
     SUITE_ADD_TEST(suite, testGetCoords);
     SUITE_ADD_TEST(suite, testGetCoordsERROR);
 
-
     return suite;
 }
 

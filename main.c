@@ -35,7 +35,6 @@ int main(int argc, char *argv[]){
     int largestId = 0;
     char answer;
     Applicant *applicantList = makeApplicantsArray(&numApplicants, &largestId);
-    printf("%d", largestId);
 
     if (setlocale(LC_ALL, "da_DK.UTF-8") == NULL) {
         printf("Locale setting failed!\n");

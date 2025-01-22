@@ -47,24 +47,24 @@ void getInput(int *postal, char *streetName, int location){
 
     // postal
     switch (location){
-    case 1:
-        /* home */
-        color = UGRN;
-        printf("We need info about the applier's %scurrent address%s.\n", color, COLOR_RESET);
-        break;
-    case 2:
-        /* occupation */
-        color = UBLU;
-        printf("\nWe need info about the applier's %soccupation's address%s.\n", color, COLOR_RESET);
-        break;
-    case 3:
-        /* housing */
-        color = UMAG;
-        printf("\nWe need info about the address for the %sdesired housing%s.\n", color, COLOR_RESET);
-        break;
-    default:
-        break;
-    }
+        case 1:
+            /* home */
+            color = UGRN;
+            printf("We need info about the applier's %scurrent address%s.\n", color, COLOR_RESET);
+            break;
+        case 2:
+            /* occupation */
+            color = UBLU;
+            printf("\nWe need info about the applier's %soccupation's address%s.\n", color, COLOR_RESET);
+            break;
+        case 3:
+            /* housing */
+            color = UMAG;
+            printf("\nWe need info about the address for the %sdesired housing%s.\n", color, COLOR_RESET);
+            break;
+        default:
+            break;
+        }
 
     while (!valid){
         printf("Enter %spostal code%s: ", color, COLOR_RESET);
